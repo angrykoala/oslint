@@ -1,0 +1,41 @@
+{
+  "name": "koalafied-typescript",
+  "version": "0.1.0",
+  "description": "Koalafied Typescript Template",
+  "main": "dist/main.js",
+  "scripts": {
+    "start": "npm run tsc && node dist/main.js",
+    "test": "nyc mocha -r ts-node/register --exit tests/hooks.ts tests/**/*.test.ts",
+    "prepublishOnly": "npm run tslint && npm test",
+    "pretest": "rm -rf dist && tsc --sourceMap",
+    "tslint": "tslint *.ts lib/*.ts lib/*/*.ts lib/*/*/*.ts",
+    "tsc": "rm -rf dist && tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angrykoala/koalafied-typescript.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "author": "angrykoala <angrykoala@outlook.es>",
+  "license": "GPL-3.0",
+  "keywords": [
+    "typescript"
+  ],
+  "bugs": {
+    "url": "https://github.com/angrykoala/koalafied-typescript/issues"
+  },
+  "homepage": "https://github.com/angrykoala/koalafied-typescript#readme",
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.0.10",
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "nyc": "^14.1.1",
+    "ts-node": "^8.3.0",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.2"
+  }
+}
