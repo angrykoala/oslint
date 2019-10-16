@@ -23,14 +23,15 @@ interface GitHubRepository {
         url: string;
     };
 }
-//
-// type RepositoryContributors = Array<{
-//     username: string;
-//     id: string;
-//     contributions: number;
-// }>
-//
-//
+
+interface RepositoryContributor {
+    username: string;
+    id: number;
+    url: string;
+    type: 'Bot' | 'User';
+    contributions: number;
+}
+
 interface RepositoryIssue {
     number: number;
     state: "open" | "closed";
@@ -40,13 +41,16 @@ interface RepositoryIssue {
     createdAt: Date;
     updatedAt: Date;
     closedAt?: Date;
-    labels: Array<string>
+    labels: Array<string>;
 }
-//
-// interface RepositoryPR extends RepositoryIssue {
-//     mergedAt: Date;
-// }
-//
+
+interface ContentItem {
+    name: string; // duplicate from path?
+    path: string;
+    type: 'file' | 'dir';
+    size: number;
+    link: string;
+}
 
 export class GitHubProvider {
     protected username: string;
@@ -90,12 +94,22 @@ export class GitHubProvider {
     //     return data;
     // }
 
-    // private static getContributors() {
-    //     // https://api.github.com/repos/angrykoala/wendigo/contributors
-    // }
-    public async fetchIssues(): Promise<RepositoryIssue> {
+    public async fetchContributors(): Promise<Array<RepositoryContributor>> {
+        const { data } = await axios.get(`${this.apiUrl}/contributors`);  // TODO: accept header
+        return data.map((contributor: any): RepositoryContributor => {
+            return {
+                username: contributor.login,
+                id: contributor.id,
+                url: contributor.html_url,
+                type: contributor.type,
+                contributions: contributor.contributions
+            };
+        });
+    }
+
+    public async fetchIssues(): Promise<Array<RepositoryIssue>> {
         const { data } = await axios.get(`${this.apiUrl}/issues`);  // TODO: accept header
-        return data.map((issue: any) => {
+        return data.map((issue: any): RepositoryIssue => {
             return {
                 number: issue.number,
                 state: issue.state,
@@ -108,12 +122,23 @@ export class GitHubProvider {
                 labels: issue.labels.map((l: any) => l.name)
             };
         });
-        // https://api.github.com/repos/angrykoala/wendigo/issues
+    }
+
+    public async fetchContents(): Promise<Array<ContentItem>> {
+        const { data } = await axios.get(`${this.apiUrl}/contents`);  // TODO: accept header
+        return data.map((item: any): ContentItem => {
+            return {
+                name: item.name,
+                path: item.path,
+                type: item.type,
+                size: item.size,
+                link: item._links.self
+            };
+        });
     }
 
     protected get apiUrl(): string {
         return `https://api.github.com/repos/${this.username}/${this.repository}`;
     }
 
-    // https://api.github.com/repos/angrykoala/wendigo/contents
 }
