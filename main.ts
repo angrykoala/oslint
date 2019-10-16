@@ -1,5 +1,12 @@
-import Example from './src/example';
+import { GitHubProvider } from "./src/providers/github_provider";
 
-const example = new Example();
+async function main(): Promise<void> {
+    const ghProvider = new GitHubProvider();
+    const result = await ghProvider.fetchRepoMetrics("angrykoala", "wendigo");
 
-console.log(example.myMethod());
+    console.log(result);
+}
+
+main().then(() => {
+    console.log("Finished");
+});
