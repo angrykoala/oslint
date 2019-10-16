@@ -31,17 +31,17 @@ interface GitHubRepository {
 // }>
 //
 //
-// interface RepositoryIssue {
-//     number: number;
-//     state: "open" | "closed";
-//     title: string;
-//     comments: number;
-//     creator: number; // user id
-//     createdAt: Date;
-//     updatedAt: Date;
-//     closedAt: Date;
-//     labels: Array<string>
-// }
+interface RepositoryIssue {
+    number: number;
+    state: "open" | "closed";
+    title: string;
+    comments: number;
+    creator: number; // user id
+    createdAt: Date;
+    updatedAt: Date;
+    closedAt?: Date;
+    labels: Array<string>
+}
 //
 // interface RepositoryPR extends RepositoryIssue {
 //     mergedAt: Date;
@@ -49,14 +49,16 @@ interface GitHubRepository {
 //
 
 export class GitHubProvider {
-    public async fetchRepoMetrics(username: string | number, repository?: string): Promise<GitHubRepository> {
-        let data;
-        if (typeof username === 'number' && !repository) {
-            data = await this.fetchRepoDataById(username);
-        } else {
-            const result = await axios.get(`https://api.github.com/repos/${username}/${repository}`); // TODO: accept header
-            data = result.data;
-        }
+    protected username: string;
+    protected repository: string;
+
+    constructor(username: string, repository: string) {
+        this.username = username;
+        this.repository = repository;
+    }
+
+    public async fetchRepoMetrics(): Promise<GitHubRepository> {
+        const { data } = await axios.get(this.apiUrl);  // TODO: accept header
 
         return {
             id: data.id,
@@ -83,17 +85,35 @@ export class GitHubProvider {
         };
     }
 
-    private async fetchRepoDataById(id: number): Promise<any> {
-        const { data } = await axios.get(`https://api.github.com/repositories/${id}`);
-        return data;
-    }
+    // private async fetchRepoDataById(id: number): Promise<any> {
+    //     const { data } = await axios.get(`https://api.github.com/repositories/${id}`);
+    //     return data;
+    // }
 
     // private static getContributors() {
     //     // https://api.github.com/repos/angrykoala/wendigo/contributors
     // }
-    // private static getIssues() {
-    //     // https://api.github.com/repos/angrykoala/wendigo/issues
-    // }
+    public async fetchIssues(): Promise<RepositoryIssue> {
+        const { data } = await axios.get(`${this.apiUrl}/issues`);  // TODO: accept header
+        return data.map((issue: any) => {
+            return {
+                number: issue.number,
+                state: issue.state,
+                title: issue.title,
+                comments: issue.comments,
+                creator: issue.user.id,
+                createdAt: issue.created_at,
+                updatedAt: issue.updated_at,
+                closedAt: issue.closed_at,
+                labels: issue.labels.map((l: any) => l.name)
+            };
+        });
+        // https://api.github.com/repos/angrykoala/wendigo/issues
+    }
+
+    protected get apiUrl(): string {
+        return `https://api.github.com/repos/${this.username}/${this.repository}`;
+    }
 
     // https://api.github.com/repos/angrykoala/wendigo/contents
 }
