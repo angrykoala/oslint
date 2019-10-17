@@ -3,6 +3,7 @@ import axios from 'axios';
 export interface GitHubRepository {
     id: number;
     name: string;
+    description?: string;
     isPrivate: boolean;
     owner: {
         username: string;
@@ -70,6 +71,7 @@ export class GitHubProvider {
             name: data.name,
             isPrivate: data.private,
             isFork: data.fork,
+            description: data.description,
             createdAt: new Date(data.created_at),
             updatedAt: new Date(data.updated_at),
             homepage: data.homepage || undefined,

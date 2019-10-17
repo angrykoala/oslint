@@ -1,6 +1,6 @@
 import { GitHubRepository, ContentItem, RepositoryIssue } from "./providers/github_provider";
 
-interface ProjectInsightsData {
+export interface ProjectInsightsData {
     hasReadme: boolean;
     hasLicense: boolean;
     hasOpenedIssues: boolean;
