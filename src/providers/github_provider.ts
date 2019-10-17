@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-interface GitHubRepository {
+export interface GitHubRepository {
     id: number;
     name: string;
     isPrivate: boolean;
@@ -24,7 +24,7 @@ interface GitHubRepository {
     };
 }
 
-interface RepositoryContributor {
+export interface RepositoryContributor {
     username: string;
     id: number;
     url: string;
@@ -32,7 +32,7 @@ interface RepositoryContributor {
     contributions: number;
 }
 
-interface RepositoryIssue {
+export interface RepositoryIssue {
     number: number;
     state: "open" | "closed";
     title: string;
@@ -44,7 +44,7 @@ interface RepositoryIssue {
     labels: Array<string>;
 }
 
-interface ContentItem {
+export interface ContentItem {
     name: string; // duplicate from path?
     path: string;
     type: 'file' | 'dir';
@@ -107,17 +107,18 @@ export class GitHubProvider {
         });
     }
 
-    public async fetchIssues(): Promise<Array<RepositoryIssue>> {
-        const { data } = await axios.get(`${this.apiUrl}/issues`);  // TODO: accept header
-        return data.map((issue: any): RepositoryIssue => {
+    public async fetchIssues(state: "open" | "closed" | "all" = "open"): Promise<Array<RepositoryIssue>> {
+        const response = await axios.get(`${this.apiUrl}/issues?state=${state}`);  // TODO: accept header
+        // console.log(response.headers.link); // todo: pagination
+        return response.data.map((issue: any): RepositoryIssue => {
             return {
                 number: issue.number,
                 state: issue.state,
                 title: issue.title,
                 comments: issue.comments,
                 creator: issue.user.id,
-                createdAt: issue.created_at,
-                updatedAt: issue.updated_at,
+                createdAt: new Date(issue.created_at),
+                updatedAt: new Date(issue.updated_at),
                 closedAt: issue.closed_at,
                 labels: issue.labels.map((l: any) => l.name)
             };
