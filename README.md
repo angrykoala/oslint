@@ -1,4 +1,4 @@
-Koalafied Typescript
+Os Analyser
 ====================
 _by @angrykoala_
 

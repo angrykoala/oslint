@@ -1,10 +1,16 @@
-import { GitHubRepository, ContentItem, RepositoryIssue } from "./providers/github_provider";
+import { GitHubRepository, ContentItem, RepositoryIssue } from "./github_provider";
 
 export interface ProjectInsightsData {
     hasReadme: boolean;
     hasLicense: boolean;
     hasOpenedIssues: boolean;
     oldIssuesCount: number;
+    issuesWithDescriptionCount: number;
+    hasDescription: boolean;
+    hasCodeOfConduct: boolean;
+    hasContributing: boolean;
+    // hasIssueTemplate: boolean;
+    // hasPRTemplate: boolean;
 }
 
 interface ProjectInsightsConfig {
@@ -23,7 +29,11 @@ export class ProjectInsights {
             hasReadme: Boolean(this.searchContentFor(contents, /^readme(\.\S+)?/i)),
             hasLicense: Boolean(this.searchContentFor(contents, /^license(\.\S+)?/i)),
             hasOpenedIssues: projectMetrics.openIssues > 0,
-            oldIssuesCount: this.getExpiredIssues(issues)
+            oldIssuesCount: this.getExpiredIssues(issues),
+            issuesWithDescriptionCount: issues.filter(i => Boolean(i.description)).length,
+            hasDescription: Boolean(projectMetrics.description),
+            hasCodeOfConduct: Boolean(this.searchContentFor(contents, /^code_of_conduct(\.\S+)?/i)),
+            hasContributing: Boolean(this.searchContentFor(contents, /^contributing(\.\S+)?/i)),
         };
     }
 

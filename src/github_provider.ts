@@ -43,6 +43,7 @@ export interface RepositoryIssue {
     updatedAt: Date;
     closedAt?: Date;
     labels: Array<string>;
+    description: string;
 }
 
 export interface ContentItem {
@@ -122,7 +123,8 @@ export class GitHubProvider {
                 createdAt: new Date(issue.created_at),
                 updatedAt: new Date(issue.updated_at),
                 closedAt: issue.closed_at,
-                labels: issue.labels.map((l: any) => l.name)
+                labels: issue.labels.map((l: any) => l.name),
+                description: issue.body
             };
         });
     }
