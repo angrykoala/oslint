@@ -1,24 +1,23 @@
-import { ProjectInsights } from "./src/project_insights";
-import { GitHubProvider } from "./src/github_provider";
+import express from 'express';
+import path from 'path';
+import generateMetrics from './provider';
 
-async function main(): Promise<void> {
-    const ghProvider = new GitHubProvider("angrykoala", "wendigo");
-    const projectInsights = new ProjectInsights({
-        issueExpirationDays: 30
+const app = express();
+app.use(express.static(path.join(__dirname, "..", 'public')));
+
+app.get("/api/metrics", async (req, res) => {
+    const username = req.query.username;
+    const repo = req.query.repo;
+    const result = await generateMetrics(username, repo);
+    res.json(result);
+});
+
+app.get("*", (_req, res) => {
+    res.sendFile("index.html", {
+        root: path.join(__dirname, "..", 'public'),
     });
+});
 
-    const metrics = {
-        project: await ghProvider.fetchRepoMetrics(),
-        contributors: await ghProvider.fetchContributors(),
-        issues: await ghProvider.fetchIssues(),
-        contents: await ghProvider.fetchContents(),
-    };
-    const insights = projectInsights.generate(metrics.project, metrics.contents, metrics.issues);
-
-    console.log(metrics);
-    console.log(insights);
-}
-
-main().then(() => {
-    console.log("Finished");
+app.listen(3030, () => {
+    console.log("Listening at 3030");
 });

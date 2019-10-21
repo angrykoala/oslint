@@ -22,6 +22,7 @@
         "main.ts"
     ],
     "exclude": [
-        "tests"
+        "tests",
+        "web"
     ]
 }
