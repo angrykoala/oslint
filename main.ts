@@ -7,7 +7,7 @@ app.use(express.static(path.join(__dirname, "..", 'public')));
 
 app.get("/api/metrics", async (req, res) => {
     const username = req.query.username;
-    const repo = req.query.repo;
+    const repo = req.query.project;
     const result = await generateMetrics(username, repo);
     res.json(result);
 });

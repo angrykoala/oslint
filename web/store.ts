@@ -1,12 +1,12 @@
 import Vuex from 'vuex';
 
 export default new Vuex.Store({
-    modules: {},
-    state: {
-    },
-    getters: {
+   modules: {},
+   state: {
+   },
+   getters: {
 
-    },
-    actions: {
-    }
+   },
+   actions: {
+   }
 });

@@ -1,54 +1,56 @@
 {
-  "name": "koalafied-typescript",
-  "version": "0.1.0",
-  "description": "Koalafied Typescript Template",
-  "main": "dist/main.js",
-  "scripts": {
-    "start": "npm run tsc && node dist/main.js",
-    "tslint": "tslint *.ts lib/*.ts lib/*/*.ts lib/*/*/*.ts",
-    "tsc": "rm -rf dist && tsc",
-    "build-frontend": "parcel build web/index.html -d public/",
-    "watch-frontend": "parcel watch web/index.html -d public/"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/angrykoala/koalafied-typescript.git"
-  },
-  "files": [
-    "dist"
-  ],
-  "author": "angrykoala <angrykoala@outlook.es>",
-  "license": "GPL-3.0",
-  "keywords": [
-    "typescript"
-  ],
-  "bugs": {
-    "url": "https://github.com/angrykoala/koalafied-typescript/issues"
-  },
-  "homepage": "https://github.com/angrykoala/koalafied-typescript#readme",
-  "devDependencies": {
-    "@types/chai": "^4.2.3",
-    "@types/express": "^4.17.1",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^12.11.0",
-    "@vue/component-compiler-utils": "^3.0.0",
-    "bulma": "^0.8.0",
-    "chai": "^4.2.0",
-    "mocha": "^6.2.1",
-    "nyc": "^14.1.1",
-    "parcel": "^1.12.4",
-    "sass": "^1.23.0",
-    "ts-node": "^8.4.1",
-    "tslint": "^5.20.0",
-    "typescript": "^3.6.4",
-    "vue": "^2.6.10",
-    "vue-router": "^3.1.3",
-    "vue-template-compiler": "^2.6.10",
-    "vuex": "^3.1.1"
-  },
-  "dependencies": {
-    "axios": "^0.19.0",
-    "express": "^4.17.1",
-    "vue-hot-reload-api": "^2.3.4"
-  }
+    "name": "koalafied-typescript",
+    "version": "0.1.0",
+    "description": "Koalafied Typescript Template",
+    "main": "dist/main.js",
+    "scripts": {
+        "start": "npm run tsc && node dist/main.js",
+        "tslint": "tslint *.ts lib/*.ts lib/*/*.ts lib/*/*/*.ts",
+        "tsc": "rm -rf dist && tsc",
+        "build-frontend": "rm -rf public && parcel build web/index.html -d public/",
+        "watch-frontend": "rm -rf public && parcel watch web/index.html -d public/"
+    },
+      "browserslist": ["last 1 Chrome versions"],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/angrykoala/koalafied-typescript.git"
+    },
+    "files": [
+        "dist"
+    ],
+    "author": "angrykoala <angrykoala@outlook.es>",
+    "license": "GPL-3.0",
+    "keywords": [
+        "typescript"
+    ],
+    "bugs": {
+        "url": "https://github.com/angrykoala/koalafied-typescript/issues"
+    },
+    "homepage": "https://github.com/angrykoala/koalafied-typescript#readme",
+    "devDependencies": {
+        "@types/chai": "^4.2.4",
+        "@types/express": "^4.17.1",
+        "@types/mocha": "^5.2.7",
+        "@types/node": "^12.11.5",
+        "@vue/component-compiler-utils": "^3.0.0",
+        "bulma": "^0.8.0",
+        "chai": "^4.2.0",
+        "eslint": "^6.5.1",
+        "mocha": "^6.2.2",
+        "nyc": "^14.1.1",
+        "parcel-bundler": "^1.12.4",
+        "sass": "^1.23.0",
+        "ts-node": "^8.4.1",
+        "tslint": "^5.20.0",
+        "typescript": "^3.6.4",
+        "vue": "^2.6.10",
+        "vue-router": "^3.1.3",
+        "vue-template-compiler": "^2.6.10",
+        "vuex": "^3.1.1"
+    },
+    "dependencies": {
+        "axios": "^0.19.0",
+        "express": "^4.17.1",
+        "vue-hot-reload-api": "^2.3.4"
+    }
 }

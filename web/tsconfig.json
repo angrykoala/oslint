@@ -8,7 +8,7 @@
         "strict": true,
         "target": "es2015",
         "typeRoots": ["./@types", "./node_modules/@types"],
-        "lib": ["es2017"],
+        "lib": ["es2017", "dom"],
         "declaration": true,
         "noUnusedParameters": false,
         "allowSyntheticDefaultImports": true,
@@ -17,12 +17,5 @@
         "emitDecoratorMetadata": true,
         "resolveJsonModule": true
     },
-    "compileOnSave": true,
-    "includes": [
-        "main.ts"
-    ],
-    "exclude": [
-        "tests",
-        "web"
-    ]
+    "compileOnSave": true
 }
