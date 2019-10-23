@@ -18,7 +18,7 @@ export interface GitHubRepository {
     language: string;
     forks: number;
     openIssues: number;
-    license: {
+    license?: {
         key: string;
         name: string;
         url: string;
@@ -66,6 +66,12 @@ export class GitHubProvider {
     public async fetchRepoMetrics(): Promise<GitHubRepository> {
         const { data } = await axios.get(this.apiUrl);  // TODO: accept header
 
+        const licenseData = data.license ? {
+            key: data.license.key,
+            name: data.license.name,
+            url: data.license.url
+        } : undefined;
+
         return {
             id: data.id,
             url: data.html_url,
@@ -80,11 +86,7 @@ export class GitHubProvider {
             language: data.language,
             forks: data.forks,
             openIssues: data.open_issues_count,
-            license: {
-                key: data.license.key,
-                name: data.license.name,
-                url: data.license.url
-            },
+            license: licenseData,
             owner: {
                 id: data.owner.id,
                 username: data.owner.login

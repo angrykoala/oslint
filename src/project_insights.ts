@@ -9,6 +9,10 @@ export interface ProjectInsightsData {
     hasDescription: SerializedInsight;
     hasCodeOfConduct: SerializedInsight;
     hasContributing: SerializedInsight;
+    hasIDEFiles: SerializedInsight;
+    hasCompiledFiles: SerializedInsight;
+    hasEnvFiles: SerializedInsight;
+    hasDependencyFiles: SerializedInsight;
     // hasIssueTemplate: SerializedInsight;
     // hasPRTemplate: SerializedInsight;
 }
@@ -34,29 +38,51 @@ export class ProjectInsights {
 
     public generate(projectMetrics: GitHubRepository, contents: Array<ContentItem>, issues: Array<RepositoryIssue>): ProjectInsightsData {
         return {
-            ...this.generateDescriptionInsight(projectMetrics),
+            ...this.generateProjectInsight(projectMetrics),
             ...this.generateRequiredFilesInsights(contents),
-            ...this.generateIssueInsights(projectMetrics, issues)
+            ...this.generateIssueInsights(projectMetrics, issues),
+            ...this.generateUnwantedFilesInsights(contents)
         };
     }
 
-    private generateDescriptionInsight(projectMetrics: GitHubRepository): Pick<ProjectInsightsData, "hasDescription"> {
+    private generateProjectInsight(projectMetrics: GitHubRepository): Pick<ProjectInsightsData, "hasDescription" | "hasLicense"> {
         const hasDescription = Boolean(projectMetrics.description);
+        // hasLicense: this.generateRequiredFileInsight(contents, /^license(\.\S+)?/i, "License"),
+        const license = projectMetrics.license;
+        let licenseText = "Your project doesn't appear to have a License, it is important to make your Open Source available to anyone who visit your project.";
+        if (license) {
+            licenseText = `Your project is licensed under ${license.name} ${license.url ? "<" + license.url + ">" : ""}`;
+        }
         return {
             hasDescription: {
                 title: "Project Has Description?",
                 text: hasDescription ? "" : "A project description is important to let people know what the project is about on lists and external links.",
                 type: hasDescription ? "hidden" : "negative"
+            },
+            hasLicense: {
+                title: "Has License?",
+                text: licenseText,
+                type: Boolean(license) ? "positive" : "negative"
             }
         };
     }
 
-    private generateRequiredFilesInsights(contents: Array<ContentItem>): Pick<ProjectInsightsData, "hasReadme" | "hasLicense" | "hasCodeOfConduct" | "hasContributing"> {
+    private generateRequiredFilesInsights(contents: Array<ContentItem>): Pick<ProjectInsightsData, "hasReadme" | "hasCodeOfConduct" | "hasContributing"> {
         return {
             hasReadme: this.generateRequiredFileInsight(contents, /^readme(\.\S+)?/i, "Readme"),
-            hasLicense: this.generateRequiredFileInsight(contents, /^license(\.\S+)?/i, "License"),
             hasCodeOfConduct: this.generateRequiredFileInsight(contents, /^code_of_conduct(\.\S+)?/i, "Code Of Conduct"),
             hasContributing: this.generateRequiredFileInsight(contents, /^contributing(\.\S+)?/i, "Contributing")
+        };
+    }
+
+    private generateUnwantedFilesInsights(contents: Array<ContentItem>): Pick<ProjectInsightsData, "hasIDEFiles" | "hasCompiledFiles" | "hasEnvFiles" | "hasDependencyFiles"> {
+        const contentsFilenames = contents.map(c => c.name);
+
+        return {
+            hasIDEFiles: this.generateUnwantedFileInsight(contentsFilenames, [".vscode", ".idea", ".vs", ".pk", ".pem", ".pub"], "IDE Files"),
+            hasCompiledFiles: this.generateUnwantedFileInsight(contentsFilenames, [".cache", "dist"], "Compiled Files"),
+            hasEnvFiles: this.generateUnwantedFileInsight(contentsFilenames, [".env"], "Environment Files"),
+            hasDependencyFiles: this.generateUnwantedFileInsight(contentsFilenames, ["node_modules"], "Dependencies"),
         };
     }
 
@@ -111,6 +137,16 @@ export class ProjectInsights {
             title: `Has ${filename}?`,
             text: text,
             type: hasFile ? "positive" : "negative",
+        };
+    }
+
+    private generateUnwantedFileInsight(contentsFilenames: Array<string>, files: Array<string>, title: string): SerializedInsight {
+        const intersection = files.filter(x => contentsFilenames.includes(x));
+
+        return {
+            title: title,
+            type: intersection.length > 0 ? "negative" : "hidden",
+            text: intersection.length > 0 ? `Found some files not usually committed to the repository: ${intersection.join(",")}` : ""
         };
     }
 
