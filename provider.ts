@@ -4,7 +4,7 @@ import { GitHubProvider } from "./src/github_provider";
 export default async function generateMetrics(username: string, repo: string): Promise<any> {
     const ghProvider = new GitHubProvider(username, repo);
     const projectInsights = new ProjectInsights({
-        issueExpirationDays: 30
+        issueExpirationDays: 180
     });
 
     const metrics = {
