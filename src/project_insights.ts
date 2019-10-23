@@ -13,6 +13,7 @@ export interface ProjectInsightsData {
     hasCompiledFiles: SerializedInsight;
     hasEnvFiles: SerializedInsight;
     hasDependencyFiles: SerializedInsight;
+    helpWantedIssues: SerializedInsight;
     // hasIssueTemplate: SerializedInsight;
     // hasPRTemplate: SerializedInsight;
 }
@@ -86,7 +87,7 @@ export class ProjectInsights {
         };
     }
 
-    private generateIssueInsights(projectMetrics: GitHubRepository, issues: Array<RepositoryIssue>): Pick<ProjectInsightsData, "hasOpenIssues" | "oldIssues" | "issuesWithoutDescription"> {
+    private generateIssueInsights(projectMetrics: GitHubRepository, issues: Array<RepositoryIssue>): Pick<ProjectInsightsData, "hasOpenIssues" | "oldIssues" | "issuesWithoutDescription" | "helpWantedIssues"> {
         const hasOpenIssues: SerializedInsight = {
             title: "Has Open Issues?",
             text: "You don't seem to have opened issues, this means potential colaborators don't know how to help",
@@ -119,10 +120,18 @@ export class ProjectInsights {
             issuesWithoutDescriptionInsight.type = "negative";
         }
 
+        const helpWantedIssuesCount = this.getIssuesByLabels(issues, ["help wanted", "good first issue"]);
+        const issuesWithHelpWantedInsight: SerializedInsight = {
+            title: "Issues With Help Wanted Labels",
+            text: `You have ${helpWantedIssuesCount ? helpWantedIssuesCount : "no"} issues with some label indicating you are looking for help. These labels help contributors focus on tasks that are simple enough and useful.`,
+            type: helpWantedIssuesCount > 0 ? "positive" : "negative"
+        };
+
         return {
             hasOpenIssues,
             oldIssues: oldIssuesCountInsight,
-            issuesWithoutDescription: issuesWithoutDescriptionInsight
+            issuesWithoutDescription: issuesWithoutDescriptionInsight,
+            helpWantedIssues: issuesWithHelpWantedInsight
         };
     }
 
@@ -161,6 +170,13 @@ export class ProjectInsights {
         const filterTimestamp = new Date().getTime() - (this.config.issueExpirationDays * daysToTimestamp);
         return issues.filter((i) => {
             return i.updatedAt.getTime() < filterTimestamp;
+        }).length;
+    }
+
+    private getIssuesByLabels(issues: Array<RepositoryIssue>, labels: Array<string>): number {
+        return issues.filter((issue) => {
+            const labelsIntersection = issue.labels.filter(x => labels.includes(x));
+            return labelsIntersection.length > 0;
         }).length;
     }
 }
