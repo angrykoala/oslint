@@ -6,18 +6,16 @@ _by @angrykoala_
 ## Instructions:
 
 1. `npm install`
-2. Create a file `config.json` in the root with the following structure:
-```json
-{
-    "githubCredentials": {
-        "username": "angrykoala",
-        "token": "8584edd2b40ce25556efab07cf05bdc15471c5b8"
-    }
-}
+2. Create a file `.env` in the root with the following structure:
+```env_file
+GITHUB_USERNAME=
+GITHUB_TOKEN=
 ```
 
-3. `npm run build-frontend` or `npm run watch-frontend`
+3. [optional] `npm run watch-frontend` to rebuild frontend automatically
 4. `npm start` to compile and run the server
+    * `npm run tsc` to recompile backend
+    * `npm run build-frontend` to recompile frontend
 
 
 ## License

@@ -1,7 +1,11 @@
 import { ProjectInsights } from "./src/project_insights";
 import { GitHubProvider } from "./src/github_provider";
-import {githubCredentials} from './config.json';
 
+const githubCredentials = {
+    username: process.env.GITHUB_USERNAME as string,
+    token: process.env.GITHUB_TOKEN as string
+};
+if (!githubCredentials.username || !githubCredentials.token) throw new Error("Missing Github Credentials");
 export default async function generateMetrics(username: string, repo: string): Promise<any> {
     const ghProvider = new GitHubProvider(githubCredentials, username, repo);
     const projectInsights = new ProjectInsights({

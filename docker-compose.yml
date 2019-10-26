@@ -1,0 +1,11 @@
+version: '3.4'
+services:
+  os-analyser:
+    build:
+      context: .
+    image: os-analyser
+    restart: always
+    ports:
+      - "80:3030"
+    env_file:
+      - .env
