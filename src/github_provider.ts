@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 export interface GitHubRepository {
     id: number;
@@ -54,13 +54,20 @@ export interface ContentItem {
     link: string;
 }
 
+export interface GithubCredentials {
+    username: string;
+    token: string;
+}
+
 export class GitHubProvider {
+    private credentials: GithubCredentials;
     protected username: string;
     protected repository: string;
 
-    constructor(username: string, repository: string) {
+    constructor(credentials: GithubCredentials, username: string, repository: string) {
         this.username = username;
         this.repository = repository;
+        this.credentials = credentials;
     }
 
     public async fetchRepoMetrics(): Promise<GitHubRepository> {
@@ -100,7 +107,7 @@ export class GitHubProvider {
     // }
 
     public async fetchContributors(): Promise<Array<RepositoryContributor>> {
-        const { data } = await axios.get(`${this.apiUrl}/contributors`);  // TODO: accept header
+        const { data } = await this.getRequest(`contributors`);  // TODO: accept header
         return data.map((contributor: any): RepositoryContributor => {
             return {
                 username: contributor.login,
@@ -113,7 +120,7 @@ export class GitHubProvider {
     }
 
     public async fetchIssues(state: "open" | "closed" | "all" = "open"): Promise<Array<RepositoryIssue>> {
-        const response = await axios.get(`${this.apiUrl}/issues?state=${state}`);  // TODO: accept header
+        const response = await this.getRequest(`issues?state=${state}`);  // TODO: accept header
         // console.log(response.headers.link); // todo: pagination
         return response.data.map((issue: any): RepositoryIssue => {
             return {
@@ -132,7 +139,7 @@ export class GitHubProvider {
     }
 
     public async fetchContents(): Promise<Array<ContentItem>> {
-        const { data } = await axios.get(`${this.apiUrl}/contents`);  // TODO: accept header
+        const { data } = await this.getRequest(`contents`);  // TODO: accept header
         return data.map((item: any): ContentItem => {
             return {
                 name: item.name,
@@ -146,6 +153,18 @@ export class GitHubProvider {
 
     protected get apiUrl(): string {
         return `https://api.github.com/repos/${this.username}/${this.repository}`;
+    }
+
+    protected getRequest(path: string): Promise<AxiosResponse> {
+        return axios.get(`${this.apiUrl}/${path}`, {
+            headers: {
+                Accept: "application/vnd.github.v3+json"
+            },
+            auth: {
+                username: this.credentials.username,
+                password: this.credentials.token
+            },
+        });
     }
 
 }

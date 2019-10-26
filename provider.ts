@@ -1,8 +1,9 @@
 import { ProjectInsights } from "./src/project_insights";
 import { GitHubProvider } from "./src/github_provider";
+import {githubCredentials} from './config.json';
 
 export default async function generateMetrics(username: string, repo: string): Promise<any> {
-    const ghProvider = new GitHubProvider(username, repo);
+    const ghProvider = new GitHubProvider(githubCredentials, username, repo);
     const projectInsights = new ProjectInsights({
         issueExpirationDays: 180
     });

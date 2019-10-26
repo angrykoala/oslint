@@ -1,9 +1,12 @@
 import express from 'express';
 import path from 'path';
+import morgan from 'morgan';
 import generateMetrics from './provider';
 
 const app = express();
 app.use(express.static(path.join(__dirname, "..", 'public')));
+
+app.use(morgan(':method :url :status - :response-time ms'));
 
 app.get("/api/metrics", async (req, res) => {
     const username = req.query.username;
