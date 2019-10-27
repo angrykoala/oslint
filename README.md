@@ -12,6 +12,14 @@ GITHUB_USERNAME=
 GITHUB_TOKEN=
 ```
 
+3. [Only for prod] Caddyfile file with this structure:
+
+```
+url {
+  proxy / os-analiser:3030
+}
+```
+
 3. [optional] `npm run watch-frontend` to rebuild frontend automatically
 4. `npm start` to compile and run the server
     * `npm run tsc` to recompile backend

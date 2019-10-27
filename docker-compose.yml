@@ -5,7 +5,23 @@ services:
       context: .
     image: os-analyser
     restart: always
+    networks:
+      - main-network
     ports:
-      - "80:3030"
+      - "127.0.0.1:3030:3030"  # port 3000 exposed only in same machine
     env_file:
       - .env
+  caddy:
+    image: abiosoft/caddy
+    restart: always
+    ports:
+      - "443:443"
+      - "80:80"
+    networks:
+      - main-network
+    volumes:
+      - "./Caddyfile:/etc/Caddyfile"
+
+networks:
+  main-network:
+    driver: bridge
