@@ -4,27 +4,36 @@
         <div class="hero-body">
             <div class="container">
                 <h1 class="title">
-                    Os Analyser
+                    OSLint
                 </h1>
             </div>
         </div>
     </section>
-    <div class="container">
-        <form @submit.prevent="onSubmit">
-            <div class="field">
-                <label class="label">Repository Url</label>
-                <div class="control">
-                    <input class="input" type="text" placeholder="https://github.com/username/project" v-model="repoUrl">
+    <section class="section">
+        <div class="container">
+            <form @submit.prevent="onSubmit">
+                <div class="field">
+                    <label class="label">Repository Url</label>
+                    <div class="control">
+                        <input class="input" type="text" placeholder="https://github.com/username/project" v-model="repoUrl">
+                    </div>
+                    <div class="control">
+                        <button class="button is-link">Submit</button>
+                    </div>
                 </div>
-                <div class="control">
-                    <button class="button is-link">Submit</button>
-                </div>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
+    </section>
     <div class="container">
         <insight-card v-for="insight of visibleInsights" :title="insight.title" :text="insight.text" :type="insight.type" />
     </div>
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <strong>OSLint</strong> by <a href="https://jgthms.com">angrykoala</a>.
+            </p>
+        </div>
+    </footer>
 </div>
 </template>
 

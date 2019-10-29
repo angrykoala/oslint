@@ -1,7 +1,7 @@
 {
-    "name": "koalafied-typescript",
+    "name": "oslint",
     "version": "0.1.0",
-    "description": "Koalafied Typescript Template",
+    "description": "Open Source Lint",
     "main": "dist/main.js",
     "scripts": {
         "start": "npm run tsc && npm run build-frontend && node dist/main.js",
