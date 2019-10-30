@@ -1,5 +1,5 @@
 <template>
-<nav class="level box container">
+<nav class="level box">
     <div class="level-item has-text-centered" v-for="(item, i) of items" :key="i">
         <div>
             <p class="heading">{{item.name}}</p>

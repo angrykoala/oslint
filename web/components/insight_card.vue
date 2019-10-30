@@ -1,9 +1,9 @@
 <template>
-<div>
+<div class="insight-card">
     <article class="message" :class="[messageStyle]">
-        <div class="message-header">
+        <!-- <div class="message-header">
             <p>{{title}}</p>
-        </div>
+        </div> -->
         <div class="message-body">
             {{text}}
         </div>
@@ -42,3 +42,10 @@ export default {
     }
 }
 </script>
+
+
+<style lang="scss">
+.insight-card {
+    margin-bottom: 8px;
+}
+</style>

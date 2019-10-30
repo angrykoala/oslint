@@ -11,20 +11,10 @@
     </section>
     <section class="section">
         <div class="container">
-            <form @submit.prevent="onSubmit">
-                <div class="field">
-                    <label class="label">Repository Url</label>
-                    <div class="control">
-                        <input class="input" type="text" placeholder="https://github.com/username/project" v-model="repoUrl">
-                    </div>
-                    <div class="control">
-                        <button class="button is-link">Submit</button>
-                    </div>
-                </div>
-            </form>
+            <repo-submit @onSubmit="onSubmit" />
         </div>
     </section>
-    <div>
+    <div class="container repo-metrics-container">
         <repo-metrics v-if="metrics" :metrics="metrics" />
     </div>
     <div class="container">
@@ -45,18 +35,19 @@
 import MetricAPI from '../api/metrics';
 import InsightCard from '../components/insight_card.vue';
 import RepoMetrics from '../components/repo_metrics.vue';
+import RepoSubmit from '../components/repo_submit.vue';
 
 export default {
     data() {
         return {
-            repoUrl: "",
             insights: null,
             metrics: null
         }
     },
     components: {
         "insight-card": InsightCard,
-        "repo-metrics": RepoMetrics
+        "repo-metrics": RepoMetrics,
+        "repo-submit": RepoSubmit
     },
     computed: {
         visibleInsights() {
@@ -65,10 +56,10 @@ export default {
         }
     },
     methods: {
-        async onSubmit() {
-            console.log(this.repoUrl)
-            const params = this.repoUrl.split("/")
-            if (params.length < 5) throw new Error("Invalid url" + this.repoUrl)
+        async onSubmit(repoUrl) {
+            console.log(repoUrl)
+            const params = repoUrl.split("/")
+            if (params.length < 5) throw new Error("Invalid url" + repoUrl)
             const username = params[3];
             const project = params[4];
             const metricApi = new MetricAPI(username, project);
@@ -80,3 +71,10 @@ export default {
     }
 }
 </script>
+
+
+<style lang="scss" scoped>
+.repo-metrics-container {
+    margin-bottom: 16px;
+}
+</style>
