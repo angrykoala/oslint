@@ -12,11 +12,18 @@ export default async function generateMetrics(username: string, repo: string): P
         issueExpirationDays: 180
     });
 
+    const data = await Promise.all([
+        ghProvider.fetchRepoMetrics(),
+        ghProvider.fetchContributors(),
+        ghProvider.fetchIssues(),
+        ghProvider.fetchContents()
+    ]);
+
     const metrics = {
-        project: await ghProvider.fetchRepoMetrics(),
-        contributors: await ghProvider.fetchContributors(),
-        issues: await ghProvider.fetchIssues(),
-        contents: await ghProvider.fetchContents(),
+        project: data[0],
+        contributors: data[1],
+        issues: data[2],
+        contents: data[3],
     };
     const insights = projectInsights.generate(metrics.project, metrics.contents, metrics.issues);
     return {

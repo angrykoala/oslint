@@ -1,3 +1,4 @@
+import querystring from 'querystring';
 import axios, { AxiosResponse } from 'axios';
 
 interface CommunityInsights {
@@ -116,7 +117,7 @@ export class GitHubProvider {
     }
 
     public async fetchContributors(): Promise<Array<RepositoryContributor>> {
-        const { data } = await this.getRequest(`contributors`);  // TODO: accept header
+        const data = await this.getBatchedRequest(`contributors`);
         return data.map((contributor: any): RepositoryContributor => {
             return {
                 username: contributor.login,
@@ -129,9 +130,10 @@ export class GitHubProvider {
     }
 
     public async fetchIssues(state: "open" | "closed" | "all" = "open"): Promise<Array<RepositoryIssue>> {
-        const response = await this.getRequest(`issues?state=${state}`);  // TODO: accept header
-        // console.log(response.headers.link); // todo: pagination
-        return response.data.map((issue: any): RepositoryIssue => {
+        const data = await this.getBatchedRequest(`issues`, {
+            state,
+        });
+        return data.map((issue: any): RepositoryIssue => {
             return {
                 number: issue.number,
                 state: issue.state,
@@ -148,7 +150,7 @@ export class GitHubProvider {
     }
 
     public async fetchContents(): Promise<Array<ContentItem>> {
-        const { data } = await this.getRequest(`contents`);  // TODO: accept header
+        const data = await this.getBatchedRequest(`contents`);
         return data.map((item: any): ContentItem => {
             return {
                 name: item.name,
@@ -162,7 +164,6 @@ export class GitHubProvider {
 
     private async fetchCommunityInsights(): Promise<CommunityInsights> {
         const { data } = await this.getRequest(`community/profile`);
-
         return {
             health: data.health_percentage,
             codeOfConduct: this.extractCommunityInsight(data.code_of_conduct),
@@ -183,8 +184,9 @@ export class GitHubProvider {
         return `https://api.github.com/repos/${this.username}/${this.repository}`;
     }
 
-    protected getRequest(path: string): Promise<AxiosResponse> {
-        return axios.get(`${this.apiUrl}/${path}`, {
+    protected getRequest(path: string, qs?: { [s: string]: string | number }): Promise<AxiosResponse> {
+        const encodedQs = querystring.encode(qs);
+        return axios.get(`${this.apiUrl}/${path}${encodedQs ? "?" + encodedQs : ""}`, {
             headers: {
                 Accept: "application/vnd.github.v3+json, application/vnd.github.black-panther-preview+json"
             },
@@ -193,6 +195,35 @@ export class GitHubProvider {
                 password: this.credentials.token
             },
         });
+    }
+
+    protected async getBatchedRequest(path: string, qs?: { [s: string]: string | number }): Promise<Array<any>> {
+        let nextPage = null;
+        let page = 1;
+        let data: Array<any> = [];
+        do {
+            const response = await this.getRequest(path, { page: page, per_page: 100, ...qs });
+            const linkHeader = this.parseLinkHeader(response);
+            nextPage = linkHeader.next;
+            page++;
+            data = data.concat(response.data);
+        } while (Boolean(nextPage));
+        return data;
+    }
+
+    protected parseLinkHeader(response: AxiosResponse): any {
+        const data = response.headers.link;
+        if (!data) return {};
+        const parsedData: any = {};
+
+        const arrData = data.split(",");
+
+        for (const d of arrData) {
+            const linkInfo = /<([^>]+)>;\s+rel="([^"]+)"/ig.exec(d);
+
+            if (linkInfo) parsedData[linkInfo[2]] = linkInfo[1];
+        }
+        return parsedData;
     }
 
 }

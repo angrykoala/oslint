@@ -95,8 +95,12 @@ export class ProjectInsights {
             type: "negative"
         };
         if (projectMetrics.openIssues > 0) {
-            hasOpenIssues.text = `You have ${projectMetrics.openIssues} open isues`;
+            hasOpenIssues.text = `You have ${projectMetrics.openIssues} open isues.`;
             hasOpenIssues.type = "neutral";
+            if (projectMetrics.openIssues > 100) {
+                hasOpenIssues.text += ` Should consider removing old, duplicate or less important issues. Having too many issues make it harder for contributores to focus on important tasks.`;
+                hasOpenIssues.type = "negative";
+            }
         }
         const oldIssuesCount = this.getExpiredIssues(issues);
         const oldIssuesCountInsight: SerializedInsight = {
@@ -132,7 +136,7 @@ export class ProjectInsights {
             hasOpenIssues,
             oldIssues: oldIssuesCountInsight,
             issuesWithoutDescription: issuesWithoutDescriptionInsight,
-            helpWantedIssues: issuesWithHelpWantedInsight
+            helpWantedIssues: issuesWithHelpWantedInsight,
         };
     }
 
