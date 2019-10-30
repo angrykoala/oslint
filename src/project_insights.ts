@@ -14,8 +14,8 @@ export interface ProjectInsightsData {
     hasEnvFiles: SerializedInsight;
     hasDependencyFiles: SerializedInsight;
     helpWantedIssues: SerializedInsight;
-    // hasIssueTemplate: SerializedInsight;
-    // hasPRTemplate: SerializedInsight;
+    hasIssueTemplate: SerializedInsight;
+    hasPRTemplate: SerializedInsight;
 }
 
 export interface SerializedInsight {
@@ -42,7 +42,8 @@ export class ProjectInsights {
             ...this.generateProjectInsight(projectMetrics),
             ...this.generateRequiredFilesInsights(contents),
             ...this.generateIssueInsights(projectMetrics, issues),
-            ...this.generateUnwantedFilesInsights(contents)
+            ...this.generateUnwantedFilesInsights(contents),
+            ...this.generateGHCommunityInsights(projectMetrics)
         };
     }
 
@@ -132,6 +133,34 @@ export class ProjectInsights {
             oldIssues: oldIssuesCountInsight,
             issuesWithoutDescription: issuesWithoutDescriptionInsight,
             helpWantedIssues: issuesWithHelpWantedInsight
+        };
+    }
+
+    private generateGHCommunityInsights(projectMetrics: GitHubRepository): Pick<ProjectInsightsData, "hasIssueTemplate" | "hasPRTemplate"> {
+        const hasPRTemplate: SerializedInsight = {
+            title: "Has Pull Request Template?",
+            text: "You don't have a Pull Request Template, A template might help collaborators on following the project processes and making worthwhile PRs.",
+            type: "negative"
+        };
+
+        if (projectMetrics.community.pullRequestTemplate) {
+            hasPRTemplate.text = "You have a Pull Request Template, helping newcomers to contribute.";
+            hasPRTemplate.type = "positive";
+        }
+        const hasIssueTemplate: SerializedInsight = {
+            title: "Has Issue Template?",
+            text: "You don't have an Template, A template might help collaborators on following the project processes and making worthwhile Issues.",
+            type: "negative"
+        };
+
+        if (projectMetrics.community.issueTemplate) {
+            hasIssueTemplate.text = "You have a Issue Template, helping newcomers to contribute and contact maintainers.";
+            hasIssueTemplate.type = "positive";
+        }
+
+        return {
+            hasPRTemplate,
+            hasIssueTemplate
         };
     }
 

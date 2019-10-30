@@ -1,5 +1,15 @@
 import axios, { AxiosResponse } from 'axios';
 
+interface CommunityInsights {
+    codeOfConduct?: string;
+    contributing?: string;
+    issueTemplate?: string;
+    pullRequestTemplate?: string;
+    license?: string;
+    readme?: string;
+    health: number;
+}
+
 export interface GitHubRepository {
     id: number;
     name: string;
@@ -23,6 +33,7 @@ export interface GitHubRepository {
         name: string;
         url: string;
     };
+    community: CommunityInsights;
 }
 
 export interface RepositoryContributor {
@@ -79,6 +90,8 @@ export class GitHubProvider {
             url: data.license.url
         } : undefined;
 
+        const community = await this.fetchCommunityInsights();
+
         return {
             id: data.id,
             url: data.html_url,
@@ -97,14 +110,10 @@ export class GitHubProvider {
             owner: {
                 id: data.owner.id,
                 username: data.owner.login
-            }
+            },
+            community
         };
     }
-
-    // private async fetchRepoDataById(id: number): Promise<any> {
-    //     const { data } = await axios.get(`https://api.github.com/repositories/${id}`);
-    //     return data;
-    // }
 
     public async fetchContributors(): Promise<Array<RepositoryContributor>> {
         const { data } = await this.getRequest(`contributors`);  // TODO: accept header
@@ -151,6 +160,25 @@ export class GitHubProvider {
         });
     }
 
+    private async fetchCommunityInsights(): Promise<CommunityInsights> {
+        const { data } = await this.getRequest(`community/profile`);
+
+        return {
+            health: data.health_percentage,
+            codeOfConduct: this.extractCommunityInsight(data.code_of_conduct),
+            contributing: this.extractCommunityInsight(data.contributing),
+            issueTemplate: this.extractCommunityInsight(data.issue_template),
+            pullRequestTemplate: this.extractCommunityInsight(data.pull_request_template),
+            license: this.extractCommunityInsight(data.license),
+            readme: this.extractCommunityInsight(data.readme),
+        };
+    }
+
+    private extractCommunityInsight(insight: { url?: string } | null): string | undefined {
+        if (insight && insight.url) return insight.url;
+        return undefined;
+    }
+
     protected get apiUrl(): string {
         return `https://api.github.com/repos/${this.username}/${this.repository}`;
     }
@@ -158,7 +186,7 @@ export class GitHubProvider {
     protected getRequest(path: string): Promise<AxiosResponse> {
         return axios.get(`${this.apiUrl}/${path}`, {
             headers: {
-                Accept: "application/vnd.github.v3+json"
+                Accept: "application/vnd.github.v3+json, application/vnd.github.black-panther-preview+json"
             },
             auth: {
                 username: this.credentials.username,

@@ -3,7 +3,7 @@ dotenv.config();
 import express from 'express';
 import path from 'path';
 import morgan from 'morgan';
-import generateMetrics from './provider';
+import generateMetrics from './src/provider';
 
 const app = express();
 app.use(express.static(path.join(__dirname, "..", 'public')));

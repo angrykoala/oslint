@@ -1,5 +1,5 @@
-import { ProjectInsights } from "./src/project_insights";
-import { GitHubProvider } from "./src/github_provider";
+import { ProjectInsights } from "./project_insights";
+import { GitHubProvider } from "./github_provider";
 
 const githubCredentials = {
     username: process.env.GITHUB_USERNAME as string,
