@@ -23,7 +23,7 @@
     <footer class="footer">
         <div class="content has-text-centered">
             <p>
-                <strong>OSLint</strong> by <a href="https://jgthms.com">angrykoala</a>.
+                <strong>OSLint</strong> by <a href="https://github.com/angrykoala">@angrykoala</a>.
             </p>
         </div>
     </footer>

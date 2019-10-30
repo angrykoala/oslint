@@ -58,7 +58,7 @@ export interface RepositoryIssue {
 }
 
 export interface ContentItem {
-    name: string; // duplicate from path?
+    name: string;
     path: string;
     type: 'file' | 'dir';
     size: number;
@@ -82,7 +82,7 @@ export class GitHubProvider {
     }
 
     public async fetchRepoMetrics(): Promise<GitHubRepository> {
-        const { data } = await axios.get(this.apiUrl);  // TODO: accept header
+        const { data } = await this.getRequest("");
 
         const licenseData = data.license ? {
             key: data.license.key,
@@ -115,7 +115,7 @@ export class GitHubProvider {
     }
 
     public async fetchContributors(): Promise<Array<RepositoryContributor>> {
-        const data = await this.getBatchedRequest(`contributors`);
+        const data = await this.getBatchedRequest(`/contributors`);
         return data.map((contributor: any): RepositoryContributor => {
             return {
                 username: contributor.login,
@@ -128,7 +128,7 @@ export class GitHubProvider {
     }
 
     public async fetchIssues(state: "open" | "closed" | "all" = "open"): Promise<Array<RepositoryIssue>> {
-        const data = await this.getBatchedRequest(`issues`, {
+        const data = await this.getBatchedRequest(`/issues`, {
             state,
         });
         return data.filter((i: any) => {
@@ -150,7 +150,7 @@ export class GitHubProvider {
     }
 
     public async fetchContents(): Promise<Array<ContentItem>> {
-        const data = await this.getBatchedRequest(`contents`);
+        const data = await this.getBatchedRequest(`/contents`);
         return data.map((item: any): ContentItem => {
             return {
                 name: item.name,
@@ -163,7 +163,7 @@ export class GitHubProvider {
     }
 
     private async fetchCommunityInsights(): Promise<CommunityInsights> {
-        const { data } = await this.getRequest(`community/profile`);
+        const { data } = await this.getRequest(`/community/profile`);
         return {
             health: data.health_percentage,
             codeOfConduct: this.extractCommunityInsight(data.files.code_of_conduct),
@@ -186,7 +186,7 @@ export class GitHubProvider {
 
     protected getRequest(path: string, qs?: { [s: string]: string | number }): Promise<AxiosResponse> {
         const encodedQs = querystring.encode(qs);
-        return axios.get(`${this.apiUrl}/${path}${encodedQs ? "?" + encodedQs : ""}`, {
+        return axios.get(`${this.apiUrl}${path}${encodedQs ? "?" + encodedQs : ""}`, {
             headers: {
                 Accept: "application/vnd.github.v3+json, application/vnd.github.black-panther-preview+json"
             },
