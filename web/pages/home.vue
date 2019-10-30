@@ -24,8 +24,11 @@
             </form>
         </div>
     </section>
+    <div>
+        <repo-metrics v-if="metrics" :metrics="metrics" />
+    </div>
     <div class="container">
-        <insight-card v-for="insight of visibleInsights" :title="insight.title" :text="insight.text" :type="insight.type" />
+        <insight-card v-for="insight of visibleInsights" :title="insight.title" :text="insight.text" :type="insight.type" :key="insight.title" />
     </div>
     <footer class="footer">
         <div class="content has-text-centered">
@@ -41,20 +44,22 @@
 <script lang="ts">
 import MetricAPI from '../api/metrics';
 import InsightCard from '../components/insight_card.vue';
+import RepoMetrics from '../components/repo_metrics.vue';
 
 export default {
     data() {
         return {
             repoUrl: "",
-            insights: null
+            insights: null,
+            metrics: null
         }
     },
     components: {
-        "insight-card": InsightCard
+        "insight-card": InsightCard,
+        "repo-metrics": RepoMetrics
     },
     computed: {
         visibleInsights() {
-            console.log(this.insights)
             if (!this.insights) return null;
             return this.insights.filter((i) => i.type !== "hidden")
         }
@@ -70,6 +75,7 @@ export default {
             const result = await metricApi.getMetrics();
             console.log(result);
             this.insights = Object.values(result.insights)
+            this.metrics = result.metrics
         }
     }
 }
