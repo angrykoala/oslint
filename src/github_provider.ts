@@ -28,7 +28,6 @@ export interface GitHubRepository {
     stars: number; // stargazers_count
     language: string;
     forks: number;
-    openIssues: number;
     license?: {
         key: string;
         name: string;
@@ -105,8 +104,7 @@ export class GitHubProvider {
             homepage: data.homepage || undefined,
             stars: data.stargazers_count,
             language: data.language,
-            forks: data.forks,
-            openIssues: data.open_issues_count,
+            forks: data.forks_count,
             license: licenseData,
             owner: {
                 id: data.owner.id,
@@ -133,7 +131,9 @@ export class GitHubProvider {
         const data = await this.getBatchedRequest(`issues`, {
             state,
         });
-        return data.map((issue: any): RepositoryIssue => {
+        return data.filter((i: any) => {
+            return !i.pull_request;  // Avoid adding PRs
+        }).map((issue: any): RepositoryIssue => {
             return {
                 number: issue.number,
                 state: issue.state,
@@ -166,12 +166,12 @@ export class GitHubProvider {
         const { data } = await this.getRequest(`community/profile`);
         return {
             health: data.health_percentage,
-            codeOfConduct: this.extractCommunityInsight(data.code_of_conduct),
-            contributing: this.extractCommunityInsight(data.contributing),
-            issueTemplate: this.extractCommunityInsight(data.issue_template),
-            pullRequestTemplate: this.extractCommunityInsight(data.pull_request_template),
-            license: this.extractCommunityInsight(data.license),
-            readme: this.extractCommunityInsight(data.readme),
+            codeOfConduct: this.extractCommunityInsight(data.files.code_of_conduct),
+            contributing: this.extractCommunityInsight(data.files.contributing),
+            issueTemplate: this.extractCommunityInsight(data.files.issue_template),
+            pullRequestTemplate: this.extractCommunityInsight(data.files.pull_request_template),
+            license: this.extractCommunityInsight(data.files.license),
+            readme: this.extractCommunityInsight(data.files.readme),
         };
     }
 

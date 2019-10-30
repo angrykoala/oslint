@@ -41,7 +41,7 @@ export class ProjectInsights {
         return {
             ...this.generateProjectInsight(projectMetrics),
             ...this.generateRequiredFilesInsights(contents),
-            ...this.generateIssueInsights(projectMetrics, issues),
+            ...this.generateIssueInsights(issues),
             ...this.generateUnwantedFilesInsights(contents),
             ...this.generateGHCommunityInsights(projectMetrics)
         };
@@ -88,44 +88,45 @@ export class ProjectInsights {
         };
     }
 
-    private generateIssueInsights(projectMetrics: GitHubRepository, issues: Array<RepositoryIssue>): Pick<ProjectInsightsData, "hasOpenIssues" | "oldIssues" | "issuesWithoutDescription" | "helpWantedIssues"> {
+    private generateIssueInsights(openIssues: Array<RepositoryIssue>): Pick<ProjectInsightsData, "hasOpenIssues" | "oldIssues" | "issuesWithoutDescription" | "helpWantedIssues"> {
+        const openIssuesCount = openIssues.length;
         const hasOpenIssues: SerializedInsight = {
             title: "Has Open Issues?",
             text: "You don't seem to have opened issues, this means potential colaborators don't know how to help",
             type: "negative"
         };
-        if (projectMetrics.openIssues > 0) {
-            hasOpenIssues.text = `You have ${projectMetrics.openIssues} open isues.`;
+        if (openIssuesCount > 0) {
+            hasOpenIssues.text = `You have ${openIssuesCount} open isues.`;
             hasOpenIssues.type = "neutral";
-            if (projectMetrics.openIssues > 100) {
+            if (openIssuesCount > 100) {
                 hasOpenIssues.text += ` Should consider removing old, duplicate or less important issues. Having too many issues make it harder for contributores to focus on important tasks.`;
                 hasOpenIssues.type = "negative";
             }
         }
-        const oldIssuesCount = this.getExpiredIssues(issues);
+        const oldIssuesCount = this.getExpiredIssues(openIssues);
         const oldIssuesCountInsight: SerializedInsight = {
             title: "Old Issues",
             text: `You have ${oldIssuesCount ? oldIssuesCount : "no"} outdated issues.`,
             type: "positive"
         };
 
-        if (oldIssuesCount > (projectMetrics.openIssues / 4)) {
+        if (oldIssuesCount > (openIssuesCount / 4)) {
             oldIssuesCountInsight.text += ` You should consider closing issues no longer relevant or update them to ensure your contributors work on important things.`;
             oldIssuesCountInsight.type = "negative";
         }
 
-        const issuesWithDescriptionCount = issues.filter(i => Boolean(i.description)).length;
+        const issuesWithoutDescriptionCount = openIssues.filter(i => !i.description).length;
         const issuesWithoutDescriptionInsight: SerializedInsight = {
             title: "Issues Without Description",
-            text: `You have ${issuesWithDescriptionCount ? issuesWithDescriptionCount : "no"} issues without description.`,
+            text: `You have ${issuesWithoutDescriptionCount ? issuesWithoutDescriptionCount : "no"} issues without description.`,
             type: "neutral"
         };
-        if (issuesWithDescriptionCount >= 1) {
+        if (issuesWithoutDescriptionCount >= 1) {
             issuesWithoutDescriptionInsight.text += " Remember that having issues without a proper description may not provide enough context for a contributor to work on these issues";
             issuesWithoutDescriptionInsight.type = "negative";
         }
 
-        const helpWantedIssuesCount = this.getIssuesByLabels(issues, ["help wanted", "good first issue"]);
+        const helpWantedIssuesCount = this.getIssuesByLabels(openIssues, ["help wanted", "good first issue"]);
         const issuesWithHelpWantedInsight: SerializedInsight = {
             title: "Issues With Help Wanted Labels",
             text: `You have ${helpWantedIssuesCount ? helpWantedIssuesCount : "no"} issues with some label indicating you are looking for help. These labels help contributors focus on tasks that are simple enough and useful.`,
@@ -153,7 +154,7 @@ export class ProjectInsights {
         }
         const hasIssueTemplate: SerializedInsight = {
             title: "Has Issue Template?",
-            text: "You don't have an Template, A template might help collaborators on following the project processes and making worthwhile Issues.",
+            text: "You don't have an issueTemplate, A template might help collaborators on following the project processes and making worthwhile Issues.",
             type: "negative"
         };
 
