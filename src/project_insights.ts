@@ -1,4 +1,5 @@
-import { GitHubRepository, ContentItem, RepositoryIssue } from "./github_provider";
+import { ContentItem, RepositoryIssue, PullRequest, ProjectMetrics } from "./github_provider";
+import { ProviderMetrics } from "./provider";
 
 export interface ProjectInsightsData {
     hasReadme: SerializedInsight;
@@ -16,6 +17,8 @@ export interface ProjectInsightsData {
     helpWantedIssues: SerializedInsight;
     hasIssueTemplate: SerializedInsight;
     hasPRTemplate: SerializedInsight;
+    oldPullRequests: SerializedInsight;
+    hasOpenPullRequests: SerializedInsight;
 }
 
 export interface SerializedInsight {
@@ -24,10 +27,11 @@ export interface SerializedInsight {
     type: InsightType;
 }
 
-export type InsightType = "positive" | "negative" | "neutral" | "hidden";
+export type InsightType = "positive" | "negative" | "neutral" | "hidden" | "warning";
 
 interface ProjectInsightsConfig {
     issueExpirationDays: number;
+    pullRequestExpirationDays: number;
 }
 
 export class ProjectInsights {
@@ -37,19 +41,19 @@ export class ProjectInsights {
         this.config = config;
     }
 
-    public generate(projectMetrics: GitHubRepository, contents: Array<ContentItem>, issues: Array<RepositoryIssue>): ProjectInsightsData {
+    public generate(metrics: ProviderMetrics): ProjectInsightsData {
         return {
-            ...this.generateProjectInsight(projectMetrics),
-            ...this.generateRequiredFilesInsights(contents),
-            ...this.generateIssueInsights(issues),
-            ...this.generateUnwantedFilesInsights(contents),
-            ...this.generateGHCommunityInsights(projectMetrics)
+            ...this.generateProjectInsight(metrics.project),
+            ...this.generateRequiredFilesInsights(metrics.contents),
+            ...this.generateIssueInsights(metrics.issues),
+            ...this.generateUnwantedFilesInsights(metrics.contents),
+            ...this.generateGHCommunityInsights(metrics.project),
+            ...this.generatePullRequestInsights(metrics.pullRequests)
         };
     }
 
-    private generateProjectInsight(projectMetrics: GitHubRepository): Pick<ProjectInsightsData, "hasDescription" | "hasLicense"> {
+    private generateProjectInsight(projectMetrics: ProjectMetrics): Pick<ProjectInsightsData, "hasDescription" | "hasLicense"> {
         const hasDescription = Boolean(projectMetrics.description);
-        // hasLicense: this.generateRequiredFileInsight(contents, /^license(\.\S+)?/i, "License"),
         const license = projectMetrics.license;
         let licenseText = "Your project doesn't appear to have a License, it is important to make your Open Source available to anyone who visit your project.";
         if (license) {
@@ -99,7 +103,7 @@ export class ProjectInsights {
             hasOpenIssues.text = `You have ${openIssuesCount} open isues.`;
             hasOpenIssues.type = "neutral";
             if (openIssuesCount > 100) {
-                hasOpenIssues.text += ` Should consider removing old, duplicate or less important issues. Having too many issues make it harder for contributores to focus on important tasks.`;
+                hasOpenIssues.text += ` You should consider removing old, duplicate or less important issues. Having too many issues make it harder for contributores to focus on important tasks.`;
                 hasOpenIssues.type = "negative";
             }
         }
@@ -141,7 +145,7 @@ export class ProjectInsights {
         };
     }
 
-    private generateGHCommunityInsights(projectMetrics: GitHubRepository): Pick<ProjectInsightsData, "hasIssueTemplate" | "hasPRTemplate"> {
+    private generateGHCommunityInsights(projectMetrics: ProjectMetrics): Pick<ProjectInsightsData, "hasIssueTemplate" | "hasPRTemplate"> {
         const hasPRTemplate: SerializedInsight = {
             title: "Has Pull Request Template?",
             text: "You don't have a Pull Request Template, A template might help collaborators on following the project processes and making worthwhile PRs.",
@@ -154,18 +158,51 @@ export class ProjectInsights {
         }
         const hasIssueTemplate: SerializedInsight = {
             title: "Has Issue Template?",
-            text: "You don't have an issueTemplate, A template might help collaborators on following the project processes and making worthwhile Issues.",
+            text: "You don't have an Issue Template, A template might help collaborators on following the project processes and making worthwhile Issues.",
             type: "negative"
         };
 
         if (projectMetrics.community.issueTemplate) {
-            hasIssueTemplate.text = "You have a Issue Template, helping newcomers to contribute and contact maintainers.";
+            hasIssueTemplate.text = "You have an Issue Template, helping newcomers to contribute and contact maintainers.";
             hasIssueTemplate.type = "positive";
         }
 
         return {
             hasPRTemplate,
             hasIssueTemplate
+        };
+    }
+
+    private generatePullRequestInsights(pullRequests: Array<PullRequest>): Pick<ProjectInsightsData, "oldPullRequests" | "hasOpenPullRequests"> {
+        const pullRequestsCount = pullRequests.length;
+        const hasOpenPullRequests: SerializedInsight = {
+            title: "Has Open Pull Requests?",
+            text: "You don't have open PRs.",
+            type: "neutral"
+        };
+        if (pullRequestsCount > 0) {
+            hasOpenPullRequests.text = `You have ${pullRequestsCount} open Pull Requests.`;
+            hasOpenPullRequests.type = "warning";
+            if (pullRequestsCount > 30) {
+                hasOpenPullRequests.text += ` Consider removing old, invalid or uncompleted PRs. Having too many PRs will make it harder for owners to quickly review new PRs.`;
+                hasOpenPullRequests.type = "negative";
+            }
+        }
+        const oldPullRequestsCount = this.getExpiredPullRequests(pullRequests);
+        const oldPullRequests: SerializedInsight = {
+            title: "Old Issues",
+            text: `You have ${oldPullRequestsCount ? oldPullRequestsCount : "no"} outdated Pull Requests.`,
+            type: "positive"
+        };
+
+        if (oldPullRequestsCount >= 1) {
+            oldPullRequests.text += ` You should review or close old Pull Requests as soon as possible to ensure a good experience for contributors.`;
+            oldPullRequests.type = "negative";
+        }
+
+        return {
+            oldPullRequests,
+            hasOpenPullRequests
         };
     }
 
@@ -204,6 +241,14 @@ export class ProjectInsights {
         const filterTimestamp = new Date().getTime() - (this.config.issueExpirationDays * daysToTimestamp);
         return issues.filter((i) => {
             return i.updatedAt.getTime() < filterTimestamp;
+        }).length;
+    }
+
+    private getExpiredPullRequests(pullRequests: Array<PullRequest>): number {
+        const daysToTimestamp = 86400000;
+        const filterTimestamp = new Date().getTime() - (this.config.pullRequestExpirationDays * daysToTimestamp);
+        return pullRequests.filter((pr) => {
+            return pr.updatedAt.getTime() < filterTimestamp;
         }).length;
     }
 

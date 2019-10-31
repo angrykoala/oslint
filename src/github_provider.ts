@@ -11,7 +11,7 @@ interface CommunityInsights {
     health: number;
 }
 
-export interface GitHubRepository {
+export interface ProjectMetrics {
     id: number;
     name: string;
     description?: string;
@@ -57,6 +57,17 @@ export interface RepositoryIssue {
     description: string;
 }
 
+export interface PullRequest {
+    number: number;
+    state: "open" | "closed";
+    title: string;
+    creator: number; // user id
+    createdAt: Date;
+    updatedAt: Date;
+    closedAt?: Date;
+    description: string;
+}
+
 export interface ContentItem {
     name: string;
     path: string;
@@ -81,7 +92,7 @@ export class GitHubProvider {
         this.credentials = credentials;
     }
 
-    public async fetchRepoMetrics(): Promise<GitHubRepository> {
+    public async fetchRepoMetrics(): Promise<ProjectMetrics> {
         const { data } = await this.getRequest("");
 
         const licenseData = data.license ? {
@@ -145,6 +156,25 @@ export class GitHubProvider {
                 closedAt: issue.closed_at,
                 labels: issue.labels.map((l: any) => l.name),
                 description: issue.body
+            };
+        });
+    }
+
+    public async fetchPullRequests(state: "open" | "closed" | "all" = "open"): Promise<Array<PullRequest>> {
+        const data = await this.getBatchedRequest(`/pulls`, {
+            state,
+        });
+
+        return data.map((pr: any): PullRequest => {
+            return {
+                number: pr.number,
+                state: pr.state,
+                title: pr.title,
+                creator: pr.user.id,
+                createdAt: new Date(pr.created_at),
+                updatedAt: new Date(pr.updated_at),
+                closedAt: pr.closed_at,
+                description: pr.body
             };
         });
     }
