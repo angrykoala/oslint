@@ -19,6 +19,7 @@ export interface ProjectInsightsData {
     hasPRTemplate: SerializedInsight;
     oldPullRequests: SerializedInsight;
     hasOpenPullRequests: SerializedInsight;
+    hasHomepage: SerializedInsight;
 }
 
 export interface SerializedInsight {
@@ -52,13 +53,17 @@ export class ProjectInsights {
         };
     }
 
-    private generateProjectInsight(projectMetrics: ProjectMetrics): Pick<ProjectInsightsData, "hasDescription" | "hasLicense"> {
+    private generateProjectInsight(projectMetrics: ProjectMetrics): Pick<ProjectInsightsData, "hasDescription" | "hasLicense" | "hasHomepage"> {
         const hasDescription = Boolean(projectMetrics.description);
+        const hasHomepage = Boolean(projectMetrics.homepage);
         const license = projectMetrics.license;
         let licenseText = "Your project doesn't appear to have a License, it is important to make your Open Source available to anyone who visit your project.";
         if (license) {
             licenseText = `Your project is licensed under ${license.name} ${license.url ? "<" + license.url + ">" : ""}`;
         }
+
+        const homepageText = hasHomepage ? `Project Webpage found at <${projectMetrics.homepage}>` : "Your project doesn't seem to have a homepage, a public webpage will help people find your project online.";
+
         return {
             hasDescription: {
                 title: "Project Has Description?",
@@ -69,6 +74,11 @@ export class ProjectInsights {
                 title: "Has License?",
                 text: licenseText,
                 type: Boolean(license) ? "positive" : "negative"
+            },
+            hasHomepage: {
+                title: "Has Homepage",
+                text: homepageText,
+                type: hasHomepage ? "neutral" : "warning"
             }
         };
     }

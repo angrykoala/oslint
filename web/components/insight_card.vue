@@ -35,6 +35,8 @@ export default {
                     return "is-success"
                 case "negative":
                     return "is-danger"
+                case "warning":
+                    return "is-warning"
                 default:
                     return ""
             }
