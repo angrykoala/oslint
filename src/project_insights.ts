@@ -200,7 +200,7 @@ export class ProjectInsights {
         }
         const oldPullRequestsCount = this.getExpiredPullRequests(pullRequests);
         const oldPullRequests: SerializedInsight = {
-            title: "Old Issues",
+            title: "Old PRs",
             text: `You have ${oldPullRequestsCount ? oldPullRequestsCount : "no"} outdated Pull Requests.`,
             type: "positive"
         };

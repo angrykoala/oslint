@@ -1,12 +1,25 @@
 <template>
-<nav class="level box">
-    <div class="level-item has-text-centered" v-for="(item, i) of items" :key="i">
-        <div>
-            <p class="heading">{{item.name}}</p>
-            <p class="title">{{item.value}}</p>
+<div>
+    <div>
+
+        <p>
+            <span class="title">{{metrics.project.name}}</span> <a :href="metrics.project.url">{{metrics.project.url}}</small>
+        </p>
+        <p>
+            {{metrics.project.description}}
+        </p>
+        <br>
+
+    </div>
+    <div class="level box">
+        <div class="level-item has-text-centered" v-for="(item, i) of items" :key="i">
+            <div>
+                <p class="heading">{{item.name}}</p>
+                <p class="title">{{item.value}}</p>
+            </div>
         </div>
     </div>
-</nav>
+</div>
 </template>
 
 
@@ -28,6 +41,9 @@ export default {
             }, {
                 name: "Forks",
                 value: this.metrics.project.forks,
+            }, {
+                name: "Pull Requests",
+                value: this.metrics.pullRequests.length
             }].filter(item => item.value !== null && item.value !== undefined)
 
             //TODO: PRs
