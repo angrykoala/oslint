@@ -20,10 +20,11 @@ url {
 }
 ```
 
-3. [optional] `npm run watch-frontend` to rebuild frontend automatically
-4. `npm start` to compile and run the server
+4. `npm run compile` to build the app
     * `npm run tsc` to recompile backend
     * `npm run build-frontend` to recompile frontend
+3. [optional] `npm run watch-frontend` to rebuild frontend automatically
+4. `npm start` to run the server
 
 
 ## License

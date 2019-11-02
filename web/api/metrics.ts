@@ -9,6 +9,7 @@ export default class MetricAPI {
 
     public async getMetrics(): Promise<any> {
         const result = await fetch(`/api/metrics?username=${this.username}&project=${this.project}`);
+        if (!result.ok) throw new Error(`Couldn't load ${this.username}/${this.project}`);
         return result.json();
     }
 }

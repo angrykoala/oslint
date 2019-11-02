@@ -2,12 +2,9 @@
 <div>
     <div>
 
-        <p>
-            <span class="title">{{metrics.project.name}}</span> <a :href="metrics.project.url">{{metrics.project.url}}</small>
-        </p>
-        <p>
-            {{metrics.project.description}}
-        </p>
+        <p class="title">{{metrics.project.name}}</p>
+        <a :href="metrics.project.url">{{metrics.project.url}}</a>
+        <p>{{metrics.project.description}}</p>
         <br>
 
     </div>

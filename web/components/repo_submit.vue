@@ -3,11 +3,11 @@
     <label class="label">Repository Url</label>
     <div class="field has-addons">
         <div class="control input-control">
-            <input class="input" type="text" placeholder="https://github.com/username/project" v-model="repoUrl">
+            <input class="input" type="text" placeholder="https://github.com/username/project" v-model="repoUrl" :disabled="loading">
         </div>
         <div class="control">
-            <button class="button is-link">
-                Submit
+            <button class="button is-link" :disabled="loading">
+                Analyze
             </button>
         </div>
     </div>
@@ -17,6 +17,9 @@
 
 <script lang="ts">
 export default {
+    props: {
+        loading: Boolean
+    },
     data() {
         return {
             repoUrl: ""
@@ -25,7 +28,7 @@ export default {
     methods: {
         onSubmit() {
             if (this.repoUrl) {
-                this.$emit("onSubmit", this.repoUrl);
+                if (!this.loading) this.$emit("onSubmit", this.repoUrl);
             }
         }
     }
