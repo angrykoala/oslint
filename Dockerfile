@@ -9,5 +9,6 @@ RUN npm install && npm cache clean --force
 ENV NODE_ENV=production
 
 COPY . /app
+RUN npm run compile
 
 CMD ["npm", "start"]

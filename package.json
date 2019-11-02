@@ -4,7 +4,8 @@
     "description": "Open Source Lint",
     "main": "dist/main.js",
     "scripts": {
-        "start": "npm run tsc && npm run build-frontend && node dist/main.js",
+        "start": "node dist/main.js",
+        "compile": "npm run build-frontend && npm run tsc",
         "tslint": "tslint *.ts lib/*.ts lib/*/*.ts lib/*/*/*.ts",
         "tsc": "rm -rf dist && tsc",
         "build-frontend": "rm -rf public && parcel build web/index.html -d public/",
