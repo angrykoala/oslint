@@ -3,7 +3,7 @@ dotenv.config();
 import express from 'express';
 import path from 'path';
 import morgan from 'morgan';
-import generateMetrics from './src/provider';
+import { generateMetrics, generateInsights } from './src/provider';
 
 const app = express();
 app.use(express.static(path.join(__dirname, "..", 'public')));
@@ -14,8 +14,12 @@ app.get("/api/metrics", async (req, res) => {
     try {
         const username = req.query.username;
         const repo = req.query.project;
-        const result = await generateMetrics(username, repo);
-        res.json(result);
+        const metrics = await generateMetrics(username, repo);
+        const insights = generateInsights(metrics);
+        res.json({
+            metrics,
+            insights
+        });
     } catch (err) {
         console.error(err.message || err);
         res.status(500).json({});

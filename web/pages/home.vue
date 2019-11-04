@@ -22,7 +22,7 @@
             <repo-metrics v-if="metrics" :metrics="metrics" />
         </div>
         <div class="container">
-            <insight-card v-for="insight of visibleInsights" :title="insight.title" :text="insight.text" :type="insight.type" :key="insight.title" />
+            <insight-card v-for="insight of visibleInsights" :title="insight.title" :text="insight.text" :feel="insight.feel" :key="insight.title" />
         </div>
         <footer class="footer">
             <div class="content has-text-centered">
@@ -63,7 +63,7 @@ export default {
     computed: {
         visibleInsights() {
             if (!this.insights) return null;
-            return this.insights.filter((i) => i.type !== "hidden")
+            return this.insights.filter((i) => i.feel !== "hidden")
         }
     },
     methods: {
@@ -81,7 +81,7 @@ export default {
                 const metricApi = new MetricAPI(username, project);
                 const result = await metricApi.getMetrics();
                 console.log(result);
-                this.insights = Object.values(result.insights)
+                this.insights = result.insights
                 this.metrics = result.metrics
             } catch (err) {
                 console.error(err)

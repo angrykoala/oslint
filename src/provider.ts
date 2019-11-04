@@ -1,5 +1,8 @@
-import { ProjectInsights } from "./project_insights";
+// import { ProjectInsights } from "./project_insights";
 import { GitHubProvider, ProjectMetrics, RepositoryContributor, RepositoryIssue, PullRequest, ContentItem } from "./github_provider";
+import { Insight } from "./insights/insight";
+import InsightsList from './insight_list';
+import { SerializedInsight } from "./insights/types";
 
 const githubCredentials = {
     username: process.env.GITHUB_USERNAME as string,
@@ -15,12 +18,8 @@ export interface ProviderMetrics {
     pullRequests: Array<PullRequest>;
 }
 
-export default async function generateMetrics(username: string, repo: string): Promise<any> {
+export async function generateMetrics(username: string, repo: string): Promise<any> {
     const ghProvider = new GitHubProvider(githubCredentials, username, repo);
-    const projectInsights = new ProjectInsights({
-        issueExpirationDays: 180,
-        pullRequestExpirationDays: 20
-    });
 
     const data = await Promise.all([
         ghProvider.fetchRepoMetrics(),
@@ -30,16 +29,18 @@ export default async function generateMetrics(username: string, repo: string): P
         ghProvider.fetchPullRequests()
     ]);
 
-    const metrics = {
+    const metrics: ProviderMetrics = {
         project: data[0],
         contributors: data[1],
         issues: data[2],
         contents: data[3],
         pullRequests: data[4]
     };
-    const insights = projectInsights.generate(metrics);
-    return {
-        metrics,
-        insights
-    };
+    return metrics;
+}
+
+export function generateInsights(metrics: ProviderMetrics): Array<SerializedInsight> {
+    return InsightsList.map((insight: Insight) => {
+        return insight.generateInsight(metrics);
+    });
 }

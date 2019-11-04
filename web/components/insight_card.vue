@@ -23,14 +23,14 @@ export default {
             type: String,
             required: true
         },
-        type: {
+        feel: {
             type: String,
             required: true
         }
     },
     computed: {
         messageStyle() {
-            switch (this.type) {
+            switch (this.feel) {
                 case "positive":
                     return "is-success"
                 case "negative":
