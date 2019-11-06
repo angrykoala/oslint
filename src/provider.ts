@@ -1,7 +1,7 @@
 // import { ProjectInsights } from "./project_insights";
 import { GitHubProvider, ProjectMetrics, RepositoryContributor, RepositoryIssue, PullRequest, ContentItem } from "./github_provider";
 import { Insight } from "./insights/insight";
-import InsightsList from './insight_list';
+import InsightsList from './insights_list';
 import { SerializedInsight } from "./insights/types";
 
 const githubCredentials = {
