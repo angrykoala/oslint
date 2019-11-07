@@ -6,30 +6,26 @@ export default class OpenIssuesInsight extends Insight {
     protected id = "openIssues";
     protected section = "Issues";
     protected type = InsightType.text;
+    protected title = "Open Issues";
 
     protected execute(metrics: ProviderMetrics): PartialInsight {
-        const title = "Open Issues";
-
         const openIssuesCount = metrics.issues.length;
 
         if (openIssuesCount === 0) {
             return {
                 text: "You don't seem to have opened issues, this means potential colaborators don't know how to help",
                 feel: InsightFeel.negative,
-                title
             };
         }
         if (openIssuesCount >= 100) {
             return {
                 text: `You have ${openIssuesCount} open isues. You should consider removing old, duplicate or less important issues. Having too many issues make it harder for contributores to focus on important tasks.`,
                 feel: InsightFeel.negative,
-                title
             };
         } else {
             return {
                 text: `You have ${openIssuesCount} open isues.`,
                 feel: InsightFeel.neutral,
-                title
             };
         }
     }

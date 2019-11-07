@@ -7,13 +7,11 @@ export default class HelpWantedIssuesInsight extends Insight {
     protected id = "helpWanterIssues";
     protected section = "Issues";
     protected type = InsightType.text;
+    protected title = "Issues With Help Wanted Labels";
 
     protected execute(metrics: ProviderMetrics): PartialInsight {
-        const title = "Issues With Help Wanted Labels";
-
         const helpWantedIssuesCount = this.getIssuesByLabels(metrics.issues, ["help wanted", "good first issue"]);
         return {
-            title,
             text: `You have ${helpWantedIssuesCount ? helpWantedIssuesCount : "no"} issues with some label indicating you are looking for help. These labels help contributors focus on tasks that are simple enough and useful.`,
             feel: helpWantedIssuesCount > 0 ? InsightFeel.positive : InsightFeel.negative
         };

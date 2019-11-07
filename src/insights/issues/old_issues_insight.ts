@@ -9,23 +9,20 @@ export default class OldIssuesInsight extends Insight {
     protected id = "oldIssues";
     protected section = "Issues";
     protected type = InsightType.text;
+    protected title = "Old Issues";
 
     protected execute(metrics: ProviderMetrics): PartialInsight {
-        const title = "Old Issues";
-
         const oldIssuesCount = this.getExpiredIssues(metrics.issues);
 
         if (oldIssuesCount >= 1) {
             return {
                 text: `You have ${oldIssuesCount} outdated Issues. Consider removing old, duplicate or less important issues. Having too many issues make it harder for contributores to focus on important tasks.`,
-                feel: InsightFeel.negative,
-                title
+                feel: InsightFeel.negative
             };
         }
         return {
             text: `You have no outdated issues.`,
-            feel: InsightFeel.positive,
-            title
+            feel: InsightFeel.positive
         };
     }
 

@@ -17,6 +17,7 @@ export interface SerializedInsight {
     title: string;
     text: string;
     feel: InsightFeel;
+    links?: Array<string>;
 }
 
-export type PartialInsight = Pick<SerializedInsight, "title" | "text" | "feel">;
+export type PartialInsight = Pick<SerializedInsight,"text" | "feel" | "links">;

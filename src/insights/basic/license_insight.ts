@@ -6,23 +6,22 @@ export default class LicenseInsight extends Insight {
     protected id = "hasLicense";
     protected section = "Basic";
     protected type = InsightType.text;
+    protected title = "Has License?"
 
     protected execute(metrics: ProviderMetrics): PartialInsight {
-        const title = "Has License?";
-
         const license = metrics.project.license;
+
         // TODO: check "Other" license
         if (license) {
             return {
-                text: `Your project is licensed under ${license.name} ${license.url ? "<" + license.url + ">" : ""}`,
+                text: `Your project is licensed under ${license.name}`,
                 feel: InsightFeel.positive,
-                title
+                links: [license.url]
             };
         }
         return {
             text: `Your project doesn't appear to have a License. A license is required to make your Open Source available to anyone who visit your project."`,
-            feel: InsightFeel.negative,
-            title
+            feel: InsightFeel.negative
         };
     }
 }
