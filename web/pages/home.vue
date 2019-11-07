@@ -25,13 +25,7 @@
             <insight-card v-for="insight of visibleInsights" :title="insight.title" :text="insight.text" :feel="insight.feel" :key="insight.title" />
         </div>
     </template>
-    <footer class="footer">
-        <div class="content has-text-centered">
-            <p>
-                <strong>OSLint</strong> by <a href="https://github.com/angrykoala">@angrykoala</a>.
-            </p>
-        </div>
-    </footer>
+    <custom-footer/>
 </div>
 </template>
 
@@ -42,6 +36,7 @@ import RepoMetrics from '../components/repo_metrics.vue';
 import RepoSubmit from '../components/repo_submit.vue';
 import Spinner from '../components/common/spinner.vue';
 import ErrorMessage from '../components/common/error_message.vue';
+import Footer from '../components/footer.vue'
 
 export default {
     data() {
@@ -54,7 +49,8 @@ export default {
         "repo-metrics": RepoMetrics,
         "repo-submit": RepoSubmit,
         "spinner": Spinner,
-        "error-message": ErrorMessage
+        "error-message": ErrorMessage,
+        "custom-footer": Footer
     },
     computed: {
         visibleInsights() {
