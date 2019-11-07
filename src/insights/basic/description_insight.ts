@@ -3,7 +3,7 @@ import { InsightType, PartialInsight, InsightFeel } from "../types";
 import { ProviderMetrics } from "../../provider";
 
 export default class DescriptionInsight extends Insight {
-    protected id = "hasLicense";
+    protected id = "hasDescription";
     protected section = "Basic";
     protected type = InsightType.text;
     protected title = "Description";

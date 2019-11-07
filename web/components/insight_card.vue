@@ -5,7 +5,7 @@
             <p>{{title}}</p>
         </div> -->
         <div class="message-body">
-            {{text}}
+            {{data.text}}
         </div>
     </article>
 </div>
@@ -15,22 +15,13 @@
 <script lang="ts">
 export default {
     props: {
-        title: {
-            type: String,
-            required: true
-        },
-        text: {
-            type: String,
-            required: true
-        },
-        feel: {
-            type: String,
+        data: {
             required: true
         }
     },
     computed: {
         messageStyle() {
-            switch (this.feel) {
+            switch (this.data.feel) {
                 case "positive":
                     return "is-success"
                 case "negative":
