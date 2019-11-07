@@ -8,7 +8,7 @@
             <p>{{data.text}}</p>
 
             <ul v-if="data.links">
-                <li v-for="link,i of data.links" v-key="i"><a :href="link">{{link}}</a></li>
+                <li v-for="link,i of data.links" :key="i"><custom-link :data="link"/></li>
             </ul>
         </div>
     </article>
@@ -17,11 +17,17 @@
 
 
 <script lang="ts">
+
+import Link from './common/link.vue';
+
 export default {
     props: {
         data: {
             required: true
         }
+    },
+    components: {
+        "custom-link": Link
     },
     computed: {
         messageStyle() {

@@ -55,6 +55,7 @@ export interface RepositoryIssue {
     closedAt?: Date;
     labels: Array<string>;
     description: string;
+    url: string;
 }
 
 export interface PullRequest {
@@ -155,7 +156,8 @@ export class GitHubProvider {
                 updatedAt: new Date(issue.updated_at),
                 closedAt: issue.closed_at,
                 labels: issue.labels.map((l: any) => l.name),
-                description: issue.body
+                description: issue.body,
+                url: issue.html_url
             };
         });
     }

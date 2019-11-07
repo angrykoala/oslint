@@ -12,12 +12,19 @@ export default class OldIssuesInsight extends Insight {
     protected title = "Old Issues";
 
     protected execute(metrics: ProviderMetrics): PartialInsight {
-        const oldIssuesCount = this.getExpiredIssues(metrics.issues);
+        const oldIssues = this.getExpiredIssues(metrics.issues);
 
-        if (oldIssuesCount >= 1) {
+        if (oldIssues.length >= 1) {
+            const feel = oldIssues.length >= 6 ? InsightFeel.negative : InsightFeel.warning;
             return {
-                text: `You have ${oldIssuesCount} outdated Issues. Consider removing old, duplicate or less important issues. Having too many issues make it harder for contributores to focus on important tasks.`,
-                feel: InsightFeel.negative
+                text: `You have ${oldIssues.length} outdated Issues. Consider removing old, duplicate or less important issues. Having too many issues make it harder for contributores to focus on important tasks.`,
+                feel,
+                links: oldIssues.map(i => {
+                    return {
+                        url: i.url,
+                        text: `#${i.number}`
+                    }
+                })
             };
         }
         return {
@@ -26,11 +33,11 @@ export default class OldIssuesInsight extends Insight {
         };
     }
 
-    private getExpiredIssues(issues: Array<RepositoryIssue>): number {
+    private getExpiredIssues(issues: Array<RepositoryIssue>): Array<RepositoryIssue> {
         const daysToTimestamp = 86400000;
         const filterTimestamp = new Date().getTime() - (issueExpirationDays * daysToTimestamp);
         return issues.filter((i) => {
             return i.updatedAt.getTime() < filterTimestamp;
-        }).length;
+        });
     }
 }
