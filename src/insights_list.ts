@@ -3,6 +3,7 @@ import CodeOfConductInsight from "./insights/github_community/code_of_conduct_in
 import IssueTemplateInsight from "./insights/github_community/issue_template_insight";
 import PullRequestTemplateInsight from "./insights/github_community/pr_template_insight";
 import ReadmeInsight from "./insights/basic/readme_insight";
+import ChangelogInsight from './insights/basic/changelog_insight';
 import HomepageInsight from "./insights/basic/homepage_insight";
 import DescriptionInsight from "./insights/basic/description_insight";
 import LicenseInsight from "./insights/basic/license_insight";
@@ -37,7 +38,8 @@ const list = [
     CodeOfConductInsight,
     ContributingInsight,
     IssueTemplateInsight,
-    PullRequestTemplateInsight
+    PullRequestTemplateInsight,
+    ChangelogInsight
 ];
 
 export default list.map(insightClass => new insightClass());
