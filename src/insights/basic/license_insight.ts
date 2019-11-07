@@ -15,8 +15,7 @@ export default class LicenseInsight extends Insight {
         if (license) {
             return {
                 text: `Your project is licensed under ${license.name}`,
-                feel: InsightFeel.positive,
-                links: [license.url]
+                feel: InsightFeel.positive
             };
         }
         return {

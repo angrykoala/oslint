@@ -5,7 +5,11 @@
             <p>{{title}}</p>
         </div> -->
         <div class="message-body">
-            {{data.text}}
+            <p>{{data.text}}</p>
+
+            <ul v-if="data.links">
+                <li v-for="link,i of data.links" v-key="i"><a :href="link">{{link}}</a></li>
+            </ul>
         </div>
     </article>
 </div>
