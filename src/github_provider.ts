@@ -67,6 +67,7 @@ export interface PullRequest {
     updatedAt: Date;
     closedAt?: Date;
     description: string;
+    url: string;
 }
 
 export interface ContentItem {
@@ -176,7 +177,8 @@ export class GitHubProvider {
                 createdAt: new Date(pr.created_at),
                 updatedAt: new Date(pr.updated_at),
                 closedAt: pr.closed_at,
-                description: pr.body
+                description: pr.body,
+                url: pr.html_url
             };
         });
     }

@@ -3,7 +3,8 @@
     <div>
 
         <p class="title">{{metrics.project.name}}</p>
-        <a :href="metrics.project.url">{{metrics.project.url}}</a>
+        <custom-link :data="metrics.project.url" />
+        <!-- <a :href="metrics.project.url">{{metrics.project.url}}</a> -->
         <p>{{metrics.project.description}}</p>
         <br>
 
@@ -21,8 +22,15 @@
 
 
 <script lang="ts">
+
+import Link from './common/link.vue';
+
+
 export default {
     props: ["metrics"],
+    components:{
+        "custom-link": Link
+    },
     computed: {
         items() {
             if (!this.metrics) return [];

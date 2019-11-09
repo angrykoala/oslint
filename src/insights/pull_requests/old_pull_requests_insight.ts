@@ -12,12 +12,18 @@ export default class OldPullRequestsInsight extends Insight {
     protected title = "Old Pull Requests";
 
     protected execute(metrics: ProviderMetrics): PartialInsight {
-        const oldPullRequestsCount = this.getExpiredPullRequests(metrics.pullRequests);
+        const oldPullRequests = this.getExpiredPullRequests(metrics.pullRequests);
 
-        if (oldPullRequestsCount >= 1) {
+        if (oldPullRequests.length >= 1) {
             return {
-                text: `You have ${oldPullRequestsCount} outdated Pull Requests. Consider reviewing or closing old Pull Requests as soon as possible to ensure a good experience for contributors.`,
-                feel: InsightFeel.negative
+                text: `You have ${oldPullRequests.length} outdated Pull Requests. Consider reviewing or closing old Pull Requests as soon as possible to ensure a good experience for contributors.`,
+                feel: InsightFeel.negative,
+                links: oldPullRequests.map(pr => {
+                    return {
+                        url: pr.url,
+                        text: `#${pr.number}`
+                    }
+                })
             };
         }
         return {
@@ -26,12 +32,12 @@ export default class OldPullRequestsInsight extends Insight {
         };
     }
 
-    private getExpiredPullRequests(pullRequests: Array<PullRequest>): number {
+    private getExpiredPullRequests(pullRequests: Array<PullRequest>): Array<PullRequest> {
         const daysToTimestamp = 86400000;
         const filterTimestamp = new Date().getTime() - (pullRequestExpirationDays * daysToTimestamp);
         return pullRequests.filter((pr) => {
             return pr.updatedAt.getTime() < filterTimestamp;
-        }).length;
+        });
     }
 
 }

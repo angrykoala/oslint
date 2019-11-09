@@ -1,7 +1,7 @@
 <template>
     <ul v-if="links">
         <li v-for="link,i of linkList" :key="i"><custom-link :data="link"/></li>
-        <li @click="toggleFullList"><b class="clickable">{{listToggleText}}</b></li>
+        <li @click="toggleFullList" v-if="showToggleButton"><b class="clickable">{{listToggleText}}</b></li>
     </ul>
 </template>
 
@@ -9,6 +9,8 @@
 <script lang="ts">
 
 import Link from './common/link.vue';
+
+const maxLinks=3;
 
 export default {
     props:{
@@ -27,10 +29,13 @@ export default {
     computed:{
         linkList(){
             if(this.showAll) return this.links;
-            else return this.links.slice(0, 3);
+            else return this.links.slice(0, maxLinks);
         },
         listToggleText(){
             return this.showAll? "Show Less": "Show More"
+        },
+        showToggleButton(){
+            return this.links.length>maxLinks;
         }
     },
     methods:{

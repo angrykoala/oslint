@@ -11,7 +11,7 @@ export default {
     },
     computed:{
         url(){
-            if(typeof this.data==='string')return this.data;
+            if(typeof this.data==='string') return this.data;
             else return this.data.url;
         },
         text(){

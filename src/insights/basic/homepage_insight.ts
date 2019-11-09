@@ -13,8 +13,9 @@ export default class HomepageInsight extends Insight {
 
         if (homepage) {
             return {
-                text: `Project Webpage found at <${homepage}>`,
+                text: `Project Webpage found!`,
                 feel: InsightFeel.neutral,
+                links: [{ url: homepage }]
             };
         }
         return {

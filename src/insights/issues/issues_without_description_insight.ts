@@ -9,12 +9,18 @@ export default class IssuesWithoutDescriptionInsight extends Insight {
     protected title = "Issues Without Description";
 
     protected execute(metrics: ProviderMetrics): PartialInsight {
-        const issuesWithoutDescriptionCount = metrics.issues.filter(i => !i.description).length;
+        const issuesWithoutDescription = metrics.issues.filter(i => !i.description);
 
-        if (issuesWithoutDescriptionCount >= 1) {
+        if (issuesWithoutDescription.length >= 1) {
             return {
-                text: `You have ${issuesWithoutDescriptionCount} issues without description. Remember that having issues without a proper description may not provide enough context for a contributor to work on these issues.`,
-                feel: InsightFeel.negative
+                text: `You have ${issuesWithoutDescription.length} issues without description. Remember that having issues without a proper description may not provide enough context for a contributor to work on these issues.`,
+                feel: InsightFeel.negative,
+                links: issuesWithoutDescription.map(i => {
+                    return {
+                        url: i.url,
+                        text: `#${i.number}`
+                    }
+                })
             };
         }
 
