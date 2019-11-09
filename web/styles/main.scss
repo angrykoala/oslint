@@ -1,19 +1,26 @@
 @import '~bulma/bulma';
 
-
 html {
-  height: 100%;
-  box-sizing: border-box;
-  overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 body {
-  position: relative;
-  margin: 0;
-  padding-bottom: 6.5rem; // related to footer size
-  min-height: 100%;
+    position: relative;
+    margin: 0;
+    padding-bottom: 6.5rem; // related to footer size
+    min-height: 100%;
 }
 
-.app-container{
+.app-container {
     margin-bottom: 1.5rem;
+}
+
+.clickable {
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
 }

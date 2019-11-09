@@ -5,11 +5,9 @@
             <p>{{title}}</p>
         </div> -->
         <div class="message-body">
-            <p>{{data.text}}</p>
+            <p>{{insight.text}}</p>
 
-            <ul v-if="data.links">
-                <li v-for="link,i of data.links" :key="i"><custom-link :data="link"/></li>
-            </ul>
+            <links-list :links="insight.links" />
         </div>
     </article>
 </div>
@@ -17,21 +15,20 @@
 
 
 <script lang="ts">
-
-import Link from './common/link.vue';
+import LinksList from './links_list.vue'
 
 export default {
     props: {
-        data: {
+        insight: {
             required: true
         }
     },
     components: {
-        "custom-link": Link
+        "links-list": LinksList
     },
     computed: {
         messageStyle() {
-            switch (this.data.feel) {
+            switch (this.insight.feel) {
                 case "positive":
                     return "is-success"
                 case "negative":

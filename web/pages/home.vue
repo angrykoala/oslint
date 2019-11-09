@@ -22,7 +22,7 @@
             <repo-metrics v-if="metrics" :metrics="metrics" />
         </div>
         <div class="container">
-            <insight-card v-for="insight of visibleInsights" :data="insight" :key="insight.id" />
+            <insight-card v-for="insight of visibleInsights" :insight="insight" :key="insight.id" />
         </div>
     </template>
     <custom-footer/>
