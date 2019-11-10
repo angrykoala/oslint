@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 // @ts-ignore
-import home from './pages/home.vue';
+import home from '../pages/home.vue';
 
 const pages = {
     home
@@ -11,6 +11,10 @@ export default new VueRouter({
     routes: [{
         path: '/',
         name: 'home',
+        component: pages.home
+    }, {
+        path: '/insights',
+        name: 'insights',
         component: pages.home
     }]
 });

@@ -7,8 +7,11 @@ Vue.use(Vuex);
 
 // @ts-ignore
 import app from './index.vue';
-import router from './router';
+import router from './router/router';
 import store from './store';
+import RouterActions from './router/router_actions';
+
+Vue.prototype.$routerActions = new RouterActions(router);
 
 export default new Vue({
     el: '#app',

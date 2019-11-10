@@ -52,6 +52,15 @@ export default {
         "error-message": ErrorMessage,
         "custom-footer": Footer
     },
+    beforeRouteEnter (to, from, next) {
+        next((vm)=>{
+            vm.fetchMetrics(to.query.username, to.query.project);
+        })
+     },
+     async beforeRouteUpdate (to, from, next) {
+         this.fetchMetrics(to.query.username, to.query.project);
+         next()
+     },
     computed: {
         visibleInsights() {
             if (!this.$store.state.insights) return null;
@@ -67,17 +76,30 @@ export default {
     methods: {
         async onSubmit(repoUrl) {
             console.log(repoUrl)
-            this.errorMessage = null
-            this.$store.commit("clearProject");
             try {
                 const params = repoUrl.split("/")
                 if (params.length < 5) throw new Error("Invalid url" + repoUrl)
                 const username = params[3];
                 const project = params[4];
-                await this.$store.dispatch("fetchMetrics", {username, project})
+                if(username!==this.$route.query.username || project!==this.$route.query.project){
+                    this.$routerActions.goToInsights(username, project)
+                }
             } catch (err) {
                 console.error(err)
-                this.errorMessage = `Couldn't load repository ${repoUrl}`;
+                this.errorMessage = `Invalid repo url ${repoUrl}`;
+            }
+        },
+        async fetchMetrics(username: string, project: string){
+            if(username && project){
+                this.errorMessage = null
+                this.$store.commit("clearProject");
+
+                try{
+                    await this.$store.dispatch("fetchMetrics", {username, project})
+                } catch (err) {
+                    console.error(err)
+                    this.errorMessage = `Couldn't load repository ${username}/${project}`;
+                }
             }
         }
     }
