@@ -6,7 +6,7 @@
             <input class="input" type="text" placeholder="https://github.com/username/project" v-model="repoUrl" :disabled="loading">
         </div>
         <div class="control">
-            <button class="button is-link" :disabled="loading">
+            <button class="button is-info" :disabled="loading">
                 Analyze
             </button>
         </div>
