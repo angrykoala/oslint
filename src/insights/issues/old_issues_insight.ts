@@ -17,7 +17,7 @@ export default class OldIssuesInsight extends Insight {
         if (oldIssues.length >= 1) {
             const feel = oldIssues.length >= 6 ? InsightFeel.negative : InsightFeel.warning;
             return {
-                text: `You have ${oldIssues.length} outdated Issues. Consider removing old, duplicate or less important issues. Having too many issues make it harder for contributores to focus on important tasks.`,
+                text: `You have ${oldIssues.length} outdated Issues. Consider removing old, duplicate or less important issues. Having old issues make it harder for contributores to focus on important tasks.`,
                 feel,
                 links: oldIssues.map(i => {
                     return {
