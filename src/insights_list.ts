@@ -18,6 +18,8 @@ import OpenIssuesInsight from "./insights/issues/open_issues_insight";
 import OldIssuesInsight from "./insights/issues/old_issues_insight";
 import HelpWantedIssuesInsight from "./insights/issues/help_wanted_issues";
 import IssuesWithoutDescriptionInsight from "./insights/issues/issues_without_description_insight";
+import LogFilesInsight from "./insights/unwanted_files/log_files";
+import CompressedFilesInsight from "./insights/unwanted_files/compressed_files";
 
 const list = [
     ReadmeInsight,
@@ -39,7 +41,9 @@ const list = [
     ContributingInsight,
     IssueTemplateInsight,
     PullRequestTemplateInsight,
-    ChangelogInsight
+    ChangelogInsight,
+    CompressedFilesInsight,
+    LogFilesInsight
 ];
 
 export default list.map(insightClass => new insightClass());
