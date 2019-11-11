@@ -1,7 +1,7 @@
 import { Insight } from "../insight";
 import { InsightType, PartialInsight, InsightFeel } from "../types";
 import { ProviderMetrics } from "../../provider";
-import { findUnwantedFiles } from "../../strategies/files";
+import { findFilesByNames } from "../../strategies/files";
 
 export default class EnvFilesInsight extends Insight {
     protected id = "envFiles";
@@ -13,7 +13,7 @@ export default class EnvFilesInsight extends Insight {
 
     protected execute(metrics: ProviderMetrics): PartialInsight {
 
-        const unwantedFiles = findUnwantedFiles(metrics.contents, this.editorFiles);
+        const unwantedFiles = findFilesByNames(metrics.contents, this.editorFiles);
         if (unwantedFiles.length > 0) {
             return {
                 text: `Found env config files: ${unwantedFiles.join(",")}. These files define the local configuration needed for your project to run and should not be committed as these files may be different in each environment.`,
