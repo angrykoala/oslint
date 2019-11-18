@@ -22,7 +22,7 @@ export default class OldPullRequestsInsight extends Insight {
                 links: oldPullRequests.map(pr => {
                     return {
                         url: pr.url,
-                        text: `#${pr.number}`
+                        text: `#${pr.number} - ${pr.title}`
                     };
                 })
             };

@@ -23,7 +23,7 @@ export default class OldIssuesInsight extends Insight {
                 links: oldIssues.map(i => {
                     return {
                         url: i.url,
-                        text: `#${i.number}`
+                        text: `#${i.number} - ${i.title}`
                     };
                 })
             };
