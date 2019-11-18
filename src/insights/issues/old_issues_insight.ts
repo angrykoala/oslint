@@ -2,6 +2,7 @@ import { Insight } from "../insight";
 import { InsightType, PartialInsight, InsightFeel } from "../types";
 import { ProviderMetrics } from "../../provider";
 import { RepositoryIssue } from "../../github_provider";
+import { getDaysSinceDate } from "../../utils";
 
 const issueExpirationDays = 30;
 
@@ -23,7 +24,7 @@ export default class OldIssuesInsight extends Insight {
                     return {
                         url: i.url,
                         text: `#${i.number}`
-                    }
+                    };
                 })
             };
         }
@@ -34,10 +35,9 @@ export default class OldIssuesInsight extends Insight {
     }
 
     private getExpiredIssues(issues: Array<RepositoryIssue>): Array<RepositoryIssue> {
-        const daysToTimestamp = 86400000;
-        const filterTimestamp = new Date().getTime() - (issueExpirationDays * daysToTimestamp);
         return issues.filter((i) => {
-            return i.updatedAt.getTime() < filterTimestamp;
+            const daysSinceIssue = getDaysSinceDate(i.updatedAt);
+            return daysSinceIssue > issueExpirationDays;
         });
     }
 }

@@ -2,6 +2,7 @@ import { Insight } from "../insight";
 import { InsightType, PartialInsight, InsightFeel } from "../types";
 import { ProviderMetrics } from "../../provider";
 import { PullRequest } from "../../github_provider";
+import { getDaysSinceDate } from "../../utils";
 
 const pullRequestExpirationDays = 10;
 
@@ -22,7 +23,7 @@ export default class OldPullRequestsInsight extends Insight {
                     return {
                         url: pr.url,
                         text: `#${pr.number}`
-                    }
+                    };
                 })
             };
         }
@@ -33,10 +34,9 @@ export default class OldPullRequestsInsight extends Insight {
     }
 
     private getExpiredPullRequests(pullRequests: Array<PullRequest>): Array<PullRequest> {
-        const daysToTimestamp = 86400000;
-        const filterTimestamp = new Date().getTime() - (pullRequestExpirationDays * daysToTimestamp);
         return pullRequests.filter((pr) => {
-            return pr.updatedAt.getTime() < filterTimestamp;
+            const daysSincePr = getDaysSinceDate(pr.updatedAt);
+            return daysSincePr > pullRequestExpirationDays;
         });
     }
 

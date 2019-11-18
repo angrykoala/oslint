@@ -34,6 +34,7 @@ export interface ProjectMetrics {
         url: string;
     };
     community: CommunityInsights;
+    defaultBranch: Branch;
 }
 
 export interface RepositoryContributor {
@@ -83,6 +84,19 @@ export interface GithubCredentials {
     token: string;
 }
 
+export interface Commit {
+    sha: string;
+    message: string;
+    author: string;
+    createdAt: Date;
+}
+
+export interface Branch {
+    name: string;
+    protected: boolean;
+    lastCommit: Commit;
+}
+
 export class GitHubProvider {
     private credentials: GithubCredentials;
     protected username: string;
@@ -104,6 +118,7 @@ export class GitHubProvider {
         } : undefined;
 
         const community = await this.fetchCommunityInsights();
+        const defaultBranch = await this.fetchBranch(data.default_branch);
 
         return {
             id: data.id,
@@ -123,7 +138,8 @@ export class GitHubProvider {
                 id: data.owner.id,
                 username: data.owner.login
             },
-            community
+            community,
+            defaultBranch
         };
     }
 
@@ -196,6 +212,21 @@ export class GitHubProvider {
         });
     }
 
+    public async fetchBranch(name: string): Promise<Branch> {
+        const { data } = await this.getRequest(`/branches/${name}`);
+        return {
+            name: data.name,
+            protected: data.protected,
+            lastCommit: {
+                sha: data.commit.sha,
+                message: data.commit.commit.message,
+                author: data.commit.commit.author.name,
+                createdAt: new Date(data.commit.commit.author.date),
+
+            }
+        };
+    }
+
     private async fetchCommunityInsights(): Promise<CommunityInsights> {
         const { data } = await this.getRequest(`/community/profile`);
         return {
@@ -208,6 +239,7 @@ export class GitHubProvider {
             readme: this.extractCommunityInsight(data.files.readme),
         };
     }
+
 
     private extractCommunityInsight(insight: { url?: string } | null): string | undefined {
         if (insight && insight.url) return insight.url;
