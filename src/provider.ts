@@ -12,7 +12,7 @@ if (!githubCredentials.username || !githubCredentials.token) throw new Error("Mi
 
 export interface ProviderMetrics {
     project: ProjectMetrics;
-    contributors: Array<RepositoryContributor>;
+    contributors?: Array<RepositoryContributor>;
     issues: Array<RepositoryIssue>;
     contents: Array<ContentItem>;
     pullRequests: Array<PullRequest>;

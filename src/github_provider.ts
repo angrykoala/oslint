@@ -1,5 +1,6 @@
 import querystring from 'querystring';
 import axios, { AxiosResponse } from 'axios';
+import OverrideError from './decorators/override_error';
 
 interface CommunityInsights {
     codeOfConduct?: string;
@@ -108,6 +109,7 @@ export class GitHubProvider {
         this.credentials = credentials;
     }
 
+    @OverrideError("GitHubProvider")
     public async fetchRepoMetrics(): Promise<ProjectMetrics> {
         const { data } = await this.getRequest("");
 
@@ -143,19 +145,25 @@ export class GitHubProvider {
         };
     }
 
-    public async fetchContributors(): Promise<Array<RepositoryContributor>> {
-        const data = await this.getBatchedRequest(`/contributors`);
-        return data.map((contributor: any): RepositoryContributor => {
-            return {
-                username: contributor.login,
-                id: contributor.id,
-                url: contributor.html_url,
-                type: contributor.type,
-                contributions: contributor.contributions
-            };
-        });
+    public async fetchContributors(): Promise<Array<RepositoryContributor> | undefined> {
+        try {
+            const data = await this.getBatchedRequest(`/contributors`);
+            return data.map((contributor: any): RepositoryContributor => {
+                return {
+                    username: contributor.login,
+                    id: contributor.id,
+                    url: contributor.html_url,
+                    type: contributor.type,
+                    contributions: contributor.contributions
+                };
+            });
+        } catch (err) {
+            console.warn(`[${this.username}/${this.repository}] Could not fetch contributors`, err.message);
+            return undefined;
+        }
     }
 
+    @OverrideError("GitHubProvider")
     public async fetchIssues(state: "open" | "closed" | "all" = "open"): Promise<Array<RepositoryIssue>> {
         const data = await this.getBatchedRequest(`/issues`, {
             state,
@@ -179,6 +187,7 @@ export class GitHubProvider {
         });
     }
 
+    @OverrideError("GitHubProvider")
     public async fetchPullRequests(state: "open" | "closed" | "all" = "open"): Promise<Array<PullRequest>> {
         const data = await this.getBatchedRequest(`/pulls`, {
             state,
@@ -199,6 +208,7 @@ export class GitHubProvider {
         });
     }
 
+    @OverrideError("GitHubProvider")
     public async fetchContents(): Promise<Array<ContentItem>> {
         const data = await this.getBatchedRequest(`/contents`);
         return data.map((item: any): ContentItem => {
@@ -212,8 +222,9 @@ export class GitHubProvider {
         });
     }
 
+    @OverrideError("GitHubProvider")
     public async fetchBranch(name: string): Promise<Branch> {
-        const { data } = await this.getRequest(`/branches/${name}`);
+        const { data } = await this.getRequest(`/branches/${name} `);
         return {
             name: data.name,
             protected: data.protected,
@@ -239,7 +250,6 @@ export class GitHubProvider {
             readme: this.extractCommunityInsight(data.files.readme),
         };
     }
-
 
     private extractCommunityInsight(insight: { url?: string } | null): string | undefined {
         if (insight && insight.url) return insight.url;
