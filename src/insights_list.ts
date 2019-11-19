@@ -21,6 +21,7 @@ import IssuesWithoutDescriptionInsight from "./insights/issues/issues_without_de
 import LogFilesInsight from "./insights/unwanted_files/log_files";
 import CompressedFilesInsight from "./insights/unwanted_files/compressed_files";
 import CommitActivity from "./insights/commits/commit_activity";
+import CrendetialFilesInsight from "./insights/unwanted_files/credential_files_insight";
 
 const list = [
     ReadmeInsight,
@@ -45,6 +46,7 @@ const list = [
     ChangelogInsight,
     CompressedFilesInsight,
     LogFilesInsight,
+    CrendetialFilesInsight,
     CommitActivity
 ];
 
