@@ -30,11 +30,11 @@ export async function generateMetrics(username: string, repo: string): Promise<a
     ]);
 
     const metrics: ProviderMetrics = {
-        project: data[0],
+        project: data[0] as ProjectMetrics,
         contributors: data[1],
-        issues: data[2],
-        contents: data[3],
-        pullRequests: data[4]
+        issues: data[2] as Array<RepositoryIssue>,
+        contents: data[3] as Array<ContentItem>,
+        pullRequests: data[4] as Array<PullRequest>
     };
     return metrics;
 }
