@@ -22,7 +22,13 @@
             <repo-metrics v-if="metrics" :metrics="metrics" />
         </div>
         <div class="container">
-            <insight-card v-for="insight of visibleInsights" :insight="insight" :key="insight.id" />
+            <!-- <div class="tabs">
+                <ul>
+                    <li v-for="section of sections" :key="section" :class="{'is-active': section===currentSection}"><a>{{section}}</a></li>
+                </ul>
+            </div> -->
+            <insights-section :insights="visibleInsights">
+            <!-- <insight-card v-for="insight of visibleInsights" :insight="insight" :key="insight.id" /> -->
         </div>
     </template>
     <custom-footer/>
@@ -31,12 +37,12 @@
 
 
 <script lang="ts">
-import InsightCard from '../components/insight_card.vue';
-import RepoMetrics from '../components/repo_metrics.vue';
-import RepoSubmit from '../components/repo_submit.vue';
-import Spinner from '../components/common/spinner.vue';
-import ErrorMessage from '../components/common/error_message.vue';
-import Footer from '../components/footer.vue'
+import InsightsSection from './insights_section/insights_section.vue';
+import RepoMetrics from './repo_metrics.vue';
+import RepoSubmit from './repo_submit.vue';
+import Spinner from '../../components/common/spinner.vue';
+import ErrorMessage from '../../components/common/error_message.vue';
+import Footer from '../../components/footer.vue'
 
 export default {
     data() {
@@ -45,7 +51,7 @@ export default {
         }
     },
     components: {
-        "insight-card": InsightCard,
+        "insights-section": InsightsSection,
         "repo-metrics": RepoMetrics,
         "repo-submit": RepoSubmit,
         "spinner": Spinner,
@@ -71,6 +77,12 @@ export default {
         },
         metrics(){
             return this.$store.state.metrics;
+        },
+        sections(){
+            return ["Insights1", "Insights2"];
+        },
+        currentSection(){
+            return "Insights2";
         }
     },
     methods: {

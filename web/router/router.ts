@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
 // @ts-ignore
-import home from '../pages/home.vue';
+import home from '../pages/home/home.vue';
 
 const pages = {
     home
