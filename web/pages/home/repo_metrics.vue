@@ -22,7 +22,8 @@
 
 
 <script lang="ts">
-import Link from './common/link.vue';
+
+import Link from '../../components/common/link.vue';
 
 
 export default {
