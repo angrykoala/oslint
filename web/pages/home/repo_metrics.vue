@@ -28,7 +28,7 @@ import Link from '../../components/common/link.vue';
 
 export default {
     props: ["metrics"],
-    components:{
+    components: {
         "custom-link": Link
     },
     computed: {
@@ -39,7 +39,7 @@ export default {
                 value: this.metrics.project.stars,
             }, {
                 name: "Contributors",
-                value: this.metrics.contributors.length,
+                value: this.metrics.contributors ? this.metrics.contributors.length : "unknown",
             }, {
                 name: "Issues",
                 value: this.metrics.issues.length,

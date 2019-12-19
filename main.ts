@@ -11,17 +11,21 @@ app.use(express.static(path.join(__dirname, "..", 'public')));
 app.use(morgan(':method :url :status - :response-time ms'));
 
 app.get("/api/metrics", async (req, res) => {
+    let username: string = "";
+    let repo: string = "";
     try {
-        const username = req.query.username;
-        const repo = req.query.project;
+        username = req.query.username;
+        repo = req.query.project;
         const metrics = await generateMetrics(username, repo);
+        console.log(`[${username}/${repo}] Metrics ready.`);
         const insights = generateInsights(metrics);
+        console.log(`[${username}/${repo}] Insights ready. Total: ${insights.length}`);
         res.json({
             metrics,
             insights
         });
     } catch (err) {
-        console.error(err.message || err);
+        console.error("\x1b[31m%s\x1b[0m", `[${username}/${repo}] ${err.message || err}`);
         res.status(500).json({});
 
     }

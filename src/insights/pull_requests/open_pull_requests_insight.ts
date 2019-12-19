@@ -12,7 +12,7 @@ export default class OpenPullRequestsInsight extends Insight {
         const pullRequestsCount = metrics.pullRequests.length;
         if (pullRequestsCount > 30) {
             return {
-                text: `You have ${pullRequestsCount} open Pull Requests. Consider removing old, invalid or uncompleter PRs.`,
+                text: `You have ${pullRequestsCount} open Pull Requests. Consider removing old, invalid or unfinished PRs.`,
                 feel: InsightFeel.warning,
             };
         } else if (pullRequestsCount > 0) {
