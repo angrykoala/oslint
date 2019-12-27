@@ -17,21 +17,20 @@
     <error-message v-if="errorMessage">{{errorMessage}}</error-message>
     <spinner v-if="loading">
     </spinner>
-    <template v-else>
+    <template v-else-if="visibleInsights">
         <div class="container repo-metrics-container">
             <repo-metrics v-if="metrics" :metrics="metrics" />
         </div>
         <div class="container">
-            <!-- <div class="tabs">
+            <div class="tabs">
                 <ul>
-                    <li v-for="section of sections" :key="section" :class="{'is-active': section===currentSection}"><a>{{section}}</a></li>
+                    <li v-for="section of sections" :key="section" :class="{'is-active': section===currentSection}"><a @click.prevent="changeSection(section)">{{section}}</a></li>
                 </ul>
-            </div> -->
+            </div>
             <insights-section :insights="visibleInsights">
-            <!-- <insight-card v-for="insight of visibleInsights" :insight="insight" :key="insight.id" /> -->
         </div>
     </template>
-    <custom-footer/>
+    <custom-footer />
 </div>
 </template>
 
@@ -48,6 +47,7 @@ export default {
     data() {
         return {
             errorMessage: null
+            currentSection: "Repository"
         }
     },
     components: {
@@ -58,31 +58,30 @@ export default {
         "error-message": ErrorMessage,
         "custom-footer": Footer
     },
-    beforeRouteEnter (to, from, next) {
-        next((vm)=>{
+    beforeRouteEnter(to, from, next) {
+        next((vm) => {
             vm.fetchMetrics(to.query.username, to.query.project);
         })
-     },
-     async beforeRouteUpdate (to, from, next) {
-         this.fetchMetrics(to.query.username, to.query.project);
-         next()
-     },
+    },
+    async beforeRouteUpdate(to, from, next) {
+        this.fetchMetrics(to.query.username, to.query.project);
+        next()
+    },
     computed: {
         visibleInsights() {
             if (!this.$store.state.insights) return null;
-            return this.$store.state.insights.filter((i) => i.feel !== "hidden")
+            return this.$store.state.insights.filter((i) => {
+                return i.feel !== "hidden" && i.section === this.currentSection
+            })
         },
-        loading(){
+        loading() {
             return this.$store.state.loading;
         },
-        metrics(){
+        metrics() {
             return this.$store.state.metrics;
         },
-        sections(){
-            return ["Insights1", "Insights2"];
-        },
-        currentSection(){
-            return "Insights2";
+        sections() {
+            return ["Repository", "Issues", "Pull Requests", "Community"];
         }
     },
     methods: {
@@ -93,7 +92,7 @@ export default {
                 if (params.length < 5) throw new Error("Invalid url" + repoUrl)
                 const username = params[3];
                 const project = params[4];
-                if(username!==this.$route.query.username || project!==this.$route.query.project){
+                if (username !== this.$route.query.username || project !== this.$route.query.project) {
                     this.$routerActions.goToInsights(username, project)
                 }
             } catch (err) {
@@ -101,18 +100,24 @@ export default {
                 this.errorMessage = `Invalid repo url ${repoUrl}`;
             }
         },
-        async fetchMetrics(username: string, project: string){
-            if(username && project){
+        async fetchMetrics(username: string, project: string) {
+            if (username && project) {
                 this.errorMessage = null
                 this.$store.commit("clearProject");
 
-                try{
-                    await this.$store.dispatch("fetchMetrics", {username, project})
+                try {
+                    await this.$store.dispatch("fetchMetrics", {
+                        username,
+                        project
+                    })
                 } catch (err) {
                     console.error(err)
                     this.errorMessage = `Couldn't load repository ${username}/${project}`;
                 }
             }
+        }
+        changeSection(section: string) {
+            this.currentSection = section;
         }
     }
 }

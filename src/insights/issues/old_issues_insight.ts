@@ -1,5 +1,5 @@
 import { Insight } from "../insight";
-import { InsightType, PartialInsight, InsightFeel } from "../types";
+import { InsightType, PartialInsight, InsightFeel, InsightSection } from "../types";
 import { ProviderMetrics } from "../../provider";
 import { RepositoryIssue } from "../../github_provider";
 import { getDaysSinceDate } from "../../utils";
@@ -8,7 +8,7 @@ const issueExpirationDays = 30;
 
 export default class OldIssuesInsight extends Insight {
     protected id = "oldIssues";
-    protected section = "Issues";
+    protected section = InsightSection.issues;
     protected type = InsightType.text;
     protected title = "Old Issues";
 

@@ -1,10 +1,10 @@
 import { Insight } from "../insight";
-import { InsightType, PartialInsight, InsightFeel } from "../types";
+import { InsightType, PartialInsight, InsightFeel, InsightSection } from "../types";
 import { ProviderMetrics } from "../../provider";
 
 export default class IssuesWithoutDescriptionInsight extends Insight {
     protected id = "issuesWithoutDescription";
-    protected section = "Issues";
+    protected section = InsightSection.issues;
     protected type = InsightType.text;
     protected title = "Issues Without Description";
 

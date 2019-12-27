@@ -1,9 +1,9 @@
 import { ProviderMetrics } from "../provider";
-import { InsightType, SerializedInsight, PartialInsight } from "./types";
+import { InsightType, SerializedInsight, PartialInsight, InsightSection } from "./types";
 
 export abstract class Insight {
     protected abstract id: string;
-    protected abstract section: string;
+    protected abstract section: InsightSection;
     protected abstract type: InsightType;
     protected abstract title: string;
 

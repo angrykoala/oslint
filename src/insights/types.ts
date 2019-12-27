@@ -17,7 +17,14 @@ export interface SerializedInsight {
     title: string;
     text: string;
     feel: InsightFeel;
-    links?: Array<{url: string, text?: string}>;
+    links?: Array<{ url: string, text?: string }>;
 }
 
 export type PartialInsight = Pick<SerializedInsight, "text" | "feel" | "links">;
+
+export enum InsightSection {
+    repository = "Repository",
+    issues = "Issues",
+    pullRequests = "Pull Requests",
+    community = "Community",
+}

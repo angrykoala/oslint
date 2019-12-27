@@ -1,11 +1,10 @@
-import { Insight } from "../insight";
 import { InsightType, PartialInsight, InsightFeel } from "../types";
 import { ProviderMetrics } from "../../provider";
 import { searchFile } from "../../strategies/files";
+import { RepositoryInsight } from "./repository_insight";
 
-export default class ReadmeInsight extends Insight {
+export default class ReadmeInsight extends RepositoryInsight {
     protected id = "hasReadme";
-    protected section = "Basic";
     protected type = InsightType.text;
     protected title = "Has Readme?";
 

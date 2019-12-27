@@ -1,11 +1,11 @@
 import { Insight } from "../insight";
-import { InsightType, PartialInsight, InsightFeel } from "../types";
+import { InsightType, PartialInsight, InsightFeel, InsightSection } from "../types";
 import { ProviderMetrics } from "../../provider";
 import { searchFile } from "../../strategies/files";
 
 export default class ContributingInsight extends Insight {
     protected id = "contributing";
-    protected section = "GitHub Community";
+    protected section = InsightSection.community;
     protected type = InsightType.text;
     protected title = "Has Contributing Instructions?";
 

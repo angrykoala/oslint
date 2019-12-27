@@ -1,11 +1,11 @@
 import { Insight } from "../insight";
-import { InsightType, PartialInsight, InsightFeel } from "../types";
+import { InsightType, PartialInsight, InsightFeel, InsightSection } from "../types";
 import { ProviderMetrics } from "../../provider";
 import { RepositoryIssue } from "../../github_provider";
 
 export default class HelpWantedIssuesInsight extends Insight {
     protected id = "helpWanterIssues";
-    protected section = "Issues";
+    protected section = InsightSection.issues;
     protected type = InsightType.text;
     protected title = "Issues With Help Wanted Labels";
 
