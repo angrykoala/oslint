@@ -1,10 +1,9 @@
-import { Insight } from "../insight";
 import { InsightType, PartialInsight, InsightFeel } from "../types";
 import { ProviderMetrics } from "../../provider";
+import { RepositoryInsight } from "./repository_insight";
 
-export default class HomepageInsight extends Insight {
+export default class HomepageInsight extends RepositoryInsight {
     protected id = "hasHomepage";
-    protected section = "Basic";
     protected type = InsightType.text;
     protected title = "Homepage";
 

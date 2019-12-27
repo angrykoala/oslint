@@ -1,12 +1,11 @@
-import { Insight } from "../insight";
 import { InsightType, PartialInsight, InsightFeel } from "../types";
 import { ProviderMetrics } from "../../provider";
+import { RepositoryInsight } from "./repository_insight";
 
-export default class LicenseInsight extends Insight {
+export default class LicenseInsight extends RepositoryInsight {
     protected id = "hasLicense";
-    protected section = "Basic";
     protected type = InsightType.text;
-    protected title = "Has License?"
+    protected title = "Has License?";
 
     protected execute(metrics: ProviderMetrics): PartialInsight {
         const license = metrics.project.license;

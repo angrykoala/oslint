@@ -1,10 +1,10 @@
 import { Insight } from "../insight";
-import { InsightType, PartialInsight, InsightFeel } from "../types";
+import { InsightType, PartialInsight, InsightFeel, InsightSection } from "../types";
 import { ProviderMetrics } from "../../provider";
 
 export default class PullRequestTemplateInsight extends Insight {
     protected id = "pullRequestTemplate";
-    protected section = "GitHub Community";
+    protected section = InsightSection.community;
     protected type = InsightType.text;
     protected title = "Has Pull Request Template?";
 

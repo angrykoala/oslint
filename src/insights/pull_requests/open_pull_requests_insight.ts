@@ -1,10 +1,10 @@
 import { Insight } from "../insight";
-import { InsightType, PartialInsight, InsightFeel } from "../types";
+import { InsightType, PartialInsight, InsightFeel, InsightSection } from "../types";
 import { ProviderMetrics } from "../../provider";
 
 export default class OpenPullRequestsInsight extends Insight {
     protected id = "openPullRequests";
-    protected section = "Pull Requests";
+    protected section = InsightSection.pullRequests;
     protected type = InsightType.text;
     protected title = "Open Pull Requests";
 

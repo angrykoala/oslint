@@ -1,13 +1,12 @@
-import { Insight } from "../insight";
 import { InsightType, PartialInsight, InsightFeel } from "../types";
 import { ProviderMetrics } from "../../provider";
 import { getDaysSinceDate } from "../../utils";
+import { RepositoryInsight } from "./repository_insight";
 
 const commitInactivityDays = 20;
 
-export default class CommitActivity extends Insight {
+export default class CommitActivity extends RepositoryInsight {
     protected id = "commitActivity";
-    protected section = "Commits";
     protected type = InsightType.text;
     protected title = "Commit Activity";
 

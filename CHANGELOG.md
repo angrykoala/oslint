@@ -1,3 +1,9 @@
+0.1.3 / 2019-12-27
+==================
+
+* Insights now divided in sections
+* Dependencies updated
+
 0.1.2 / 2019-11-20
 ==================
 

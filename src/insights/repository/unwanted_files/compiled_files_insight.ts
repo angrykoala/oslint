@@ -1,11 +1,10 @@
-import { Insight } from "../insight";
-import { InsightType, PartialInsight, InsightFeel } from "../types";
-import { ProviderMetrics } from "../../provider";
-import { findFilesByNames } from "../../strategies/files";
+import { InsightType, PartialInsight, InsightFeel } from "../../types";
+import { ProviderMetrics } from "../../../provider";
+import { findFilesByNames } from "../../../strategies/files";
+import { RepositoryInsight } from "../repository_insight";
 
-export default class CompiledFilesInsight extends Insight {
+export default class CompiledFilesInsight extends RepositoryInsight {
     protected id = "compiledFiles";
-    protected section = "Unwanted Files";
     protected type = InsightType.text;
     protected title = "Compiled Files";
 

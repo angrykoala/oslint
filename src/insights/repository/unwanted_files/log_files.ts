@@ -1,11 +1,10 @@
-import { Insight } from "../insight";
-import { InsightType, PartialInsight, InsightFeel } from "../types";
-import { ProviderMetrics } from "../../provider";
-import { findFilesByExtension } from "../../strategies/files";
+import { InsightType, PartialInsight, InsightFeel } from "../../types";
+import { ProviderMetrics } from "../../../provider";
+import { findFilesByExtension } from "../../../strategies/files";
+import { RepositoryInsight } from "../repository_insight";
 
-export default class LogFilesInsight extends Insight {
+export default class LogFilesInsight extends RepositoryInsight {
     protected id = "logFiles";
-    protected section = "Unwanted Files";
     protected type = InsightType.text;
     protected title = "Log Files";
 
@@ -14,7 +13,7 @@ export default class LogFilesInsight extends Insight {
     protected execute(metrics: ProviderMetrics): PartialInsight {
         const filenamesByExtension = this.logFilesExtensions.map((extension: string) => {
             return findFilesByExtension(metrics.contents, extension).map(f => f.name);
-        })
+        });
 
         const unwantedFiles = ([] as Array<string>).concat(...filenamesByExtension);
         if (unwantedFiles.length > 0) {

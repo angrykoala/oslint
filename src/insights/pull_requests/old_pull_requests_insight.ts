@@ -1,5 +1,5 @@
 import { Insight } from "../insight";
-import { InsightType, PartialInsight, InsightFeel } from "../types";
+import { InsightType, PartialInsight, InsightFeel, InsightSection } from "../types";
 import { ProviderMetrics } from "../../provider";
 import { PullRequest } from "../../github_provider";
 import { getDaysSinceDate } from "../../utils";
@@ -8,7 +8,7 @@ const pullRequestExpirationDays = 10;
 
 export default class OldPullRequestsInsight extends Insight {
     protected id = "oldPullRequests";
-    protected section = "Pull Requests";
+    protected section = InsightSection.pullRequests;
     protected type = InsightType.text;
     protected title = "Old Pull Requests";
 
