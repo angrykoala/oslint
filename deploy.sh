@@ -5,12 +5,13 @@
 echo "OSLint Deployer"
 echo "by @angrykoala"
 
+git checkout master
 git pull
 
 case $1 in
    caddy)
        echo "Deploy Caddy"
-       docker-compose up -d --build rabbitmq
+       docker-compose up -d --build caddy
        ;;
    oslint)
        echo "Deploy Oslint"
