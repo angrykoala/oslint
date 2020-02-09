@@ -31,6 +31,10 @@ app.get("/api/metrics", async (req, res) => {
     }
 });
 
+app.get("/api/*", (_req, res) => {
+    res.status(400).send();
+});
+
 app.get("*", (_req, res) => {
     res.sendFile("index.html", {
         root: path.join(__dirname, "..", 'public'),
