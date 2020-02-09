@@ -23,6 +23,7 @@ import LogFilesInsight from "./insights/repository/unwanted_files/log_files";
 import CrendetialFilesInsight from "./insights/repository/unwanted_files/credential_files_insight";
 import CommitActivity from "./insights/repository/commit_activity";
 import BlockedIssuesInsight from "./insights/issues/blocked_issues_insight";
+import BugIssuesInsight from "./insights/issues/bugs_issues_insight";
 
 const list = [
     ReadmeInsight,
@@ -33,6 +34,7 @@ const list = [
     OpenPullRequestsInsight,
     OpenIssuesInsight,
     OldIssuesInsight,
+    BugIssuesInsight,
     IssuesWithoutDescriptionInsight,
     HelpWantedIssuesInsight,
     IDEFilesInsight,

@@ -3,17 +3,17 @@ import { InsightType, PartialInsight, InsightFeel, InsightSection } from "../typ
 import { ProviderMetrics } from "../../provider";
 import { getIssuesByLabels } from "../../strategies/issues";
 
-export default class BlockedIssuesInsight extends Insight {
-    protected id = "blockedIssues";
+export default class BugIssuesInsight extends Insight {
+    protected id = "bugIssues";
     protected section = InsightSection.issues;
     protected type = InsightType.text;
-    protected title = "Issues marked as Blocked";
+    protected title = "Issues marked as Bugs";
 
     protected execute(metrics: ProviderMetrics): PartialInsight {
-        const blockedCount = getIssuesByLabels(metrics.issues, ["blocked"]);
+        const bugsCount = getIssuesByLabels(metrics.issues, ["bug", "critical"]);
         return {
-            text: `You have ${blockedCount ? blockedCount : "no"} issues marked as blocked.`,
-            feel: blockedCount > 0 ? InsightFeel.warning : InsightFeel.positive
+            text: `You have ${bugsCount ? bugsCount : "no"} issues marked as bugs or critical.`,
+            feel: bugsCount > 0 ? InsightFeel.negative : InsightFeel.positive
         };
     }
 }
