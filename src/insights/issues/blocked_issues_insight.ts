@@ -3,17 +3,17 @@ import { InsightType, PartialInsight, InsightFeel, InsightSection } from "../typ
 import { ProviderMetrics } from "../../provider";
 import { RepositoryIssue } from "../../github_provider";
 
-export default class HelpWantedIssuesInsight extends Insight {
-    protected id = "helpWantedIssues";
+export default class BlockedIssuesInsight extends Insight {
+    protected id = "blockedIssues";
     protected section = InsightSection.issues;
     protected type = InsightType.text;
-    protected title = "Issues With Help Wanted Labels";
+    protected title = "Issues marked as Blocked";
 
     protected execute(metrics: ProviderMetrics): PartialInsight {
-        const helpWantedIssuesCount = this.getIssuesByLabels(metrics.issues, ["help wanted", "good first issue"]);
+        const helpWantedIssuesCount = this.getIssuesByLabels(metrics.issues, ["blocked"]);
         return {
-            text: `You have ${helpWantedIssuesCount ? helpWantedIssuesCount : "no"} issues with some label indicating you are looking for help. These labels help contributors focus on tasks that are simple enough and useful.`,
-            feel: helpWantedIssuesCount > 0 ? InsightFeel.positive : InsightFeel.negative
+            text: `You have ${helpWantedIssuesCount ? helpWantedIssuesCount : "no"} issues marked as blocked.`,
+            feel: InsightFeel.neutral
         };
     }
 

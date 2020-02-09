@@ -22,6 +22,7 @@ import CompressedFilesInsight from "./insights/repository/unwanted_files/compres
 import LogFilesInsight from "./insights/repository/unwanted_files/log_files";
 import CrendetialFilesInsight from "./insights/repository/unwanted_files/credential_files_insight";
 import CommitActivity from "./insights/repository/commit_activity";
+import BlockedIssuesInsight from "./insights/issues/blocked_issues_insight";
 
 const list = [
     ReadmeInsight,
@@ -36,6 +37,7 @@ const list = [
     HelpWantedIssuesInsight,
     IDEFilesInsight,
     CompiledFilesInsight,
+    BlockedIssuesInsight,
     EnvFilesInsight,
     DependencyFilesInsight,
     SystemFilesInsight,
