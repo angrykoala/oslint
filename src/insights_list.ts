@@ -24,6 +24,7 @@ import CrendetialFilesInsight from "./insights/repository/unwanted_files/credent
 import CommitActivity from "./insights/repository/commit_activity";
 import BlockedIssuesInsight from "./insights/issues/blocked_issues_insight";
 import BugIssuesInsight from "./insights/issues/bugs_issues_insight";
+import HasWikiInsight from "./insights/community/has_wiki_insight";
 
 const list = [
     ReadmeInsight,
@@ -51,7 +52,8 @@ const list = [
     CompressedFilesInsight,
     LogFilesInsight,
     CrendetialFilesInsight,
-    CommitActivity
+    CommitActivity,
+    HasWikiInsight
 ];
 
 export default list.map(insightClass => new insightClass());

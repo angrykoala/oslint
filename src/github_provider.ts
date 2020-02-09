@@ -29,6 +29,7 @@ export interface ProjectMetrics {
     stars: number; // stargazers_count
     language: string;
     forks: number;
+    hasWiki: boolean;
     license?: {
         key: string;
         name: string;
@@ -135,6 +136,7 @@ export class GitHubProvider {
             stars: data.stargazers_count,
             language: data.language,
             forks: data.forks_count,
+            hasWiki: data.has_wiki,
             license: licenseData,
             owner: {
                 id: data.owner.id,
