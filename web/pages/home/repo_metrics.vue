@@ -50,13 +50,6 @@ export default {
                 name: "Pull Requests",
                 value: this.metrics.pullRequests.length
             }].filter(item => item.value !== null && item.value !== undefined)
-
-            //TODO: PRs
-
-            // Name
-            // Description
-            // Url
-            // Webpage
         }
     }
 }

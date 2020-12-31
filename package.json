@@ -1,6 +1,6 @@
 {
     "name": "oslint",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "description": "Open Source Lint",
     "main": "dist/main.js",
     "scripts": {
@@ -12,7 +12,7 @@
         "watch-frontend": "rm -rf public && parcel watch web/index.html -d public/"
     },
     "browserslist": [
-        "last 1 Chrome versions"
+        "last 1 Chrome version"
     ],
     "repository": {
         "type": "git",

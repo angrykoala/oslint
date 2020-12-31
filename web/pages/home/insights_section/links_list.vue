@@ -1,19 +1,24 @@
 <template>
-    <ul v-if="links">
-        <li v-for="link,i of linkList" :key="i"><custom-link :data="link"/></li>
+<div>
+    <ul v-if="links" class="links-list">
+        <li v-for="link,i of linkList" :key="i">
+            <custom-link :data="link" />
+        </li>
+    </ul>
+    <ul>
         <li @click="toggleFullList" v-if="showToggleButton"><b class="clickable">{{listToggleText}}</b></li>
     </ul>
+</div>
 </template>
 
 
 <script lang="ts">
-
 import Link from '../../../components/common/link.vue';
 
-const maxLinks=3;
+const maxLinks = 3;
 
 export default {
-    props:{
+    props: {
         links: {
             required: true
         }
@@ -21,28 +26,35 @@ export default {
     components: {
         "custom-link": Link,
     },
-    data(){
+    data() {
         return {
             showAll: false
         }
     },
-    computed:{
-        linkList(){
-            if(this.showAll) return this.links;
+    computed: {
+        linkList() {
+            if (this.showAll) return this.links;
             else return this.links.slice(0, maxLinks);
         },
-        listToggleText(){
-            return this.showAll? "Show Less": "Show More"
+        listToggleText() {
+            return this.showAll ? "Show Less" : "Show More"
         },
-        showToggleButton(){
-            return this.links.length>maxLinks;
+        showToggleButton() {
+            return this.links.length > maxLinks;
         }
     },
-    methods:{
-        toggleFullList(){
-            this.showAll=!this.showAll
+    methods: {
+        toggleFullList() {
+            this.showAll = !this.showAll
         }
     }
 }
-
 </script>
+
+
+<style lang="scss">
+.links-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+</style>

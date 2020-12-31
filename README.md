@@ -2,6 +2,8 @@ OSLint
 ====================
 _by @angrykoala_
 
+Analyse Open source projects and give hints on how to improve them. Only GitHub projects supported for now.
+
 
 ## Instructions:
 
@@ -30,6 +32,7 @@ url {
 ```
 
 * `docker-compose up -d`
+* `docker-compose up -d --build oslint` to update
 
 ## License
 This projects is under GPL-3.0 License
