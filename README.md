@@ -22,17 +22,16 @@ GITHUB_TOKEN=
 
 ## Deploy with Caddy
 
-
-* Caddyfile file with this structure:
+* Add Caddyfile with this structure:
 
 ```
-url {
-  proxy / os-analiser:3030
+<Public-url> {
+  proxy / oslint:3030
 }
 ```
 
-* `docker-compose up -d`
-* `docker-compose up -d --build oslint` to update
+* Execute `bash deploy.sh`
+* To deploy a new version of oslint execute `bash deploy.sh oslint`
 
 ## License
 This projects is under GPL-3.0 License
