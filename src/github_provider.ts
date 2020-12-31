@@ -97,6 +97,7 @@ export interface Branch {
     name: string;
     protected: boolean;
     lastCommit: Commit;
+    url: string;
 }
 
 export class GitHubProvider {
@@ -226,18 +227,28 @@ export class GitHubProvider {
 
     @OverrideError("GitHubProvider")
     public async fetchBranch(name: string): Promise<Branch> {
-        const { data } = await this.getRequest(`/branches/${name} `);
+        const { data } = await this.getRequest(`/branches/${name}`);
         return {
             name: data.name,
             protected: data.protected,
+            url: data._links.html,
             lastCommit: {
                 sha: data.commit.sha,
                 message: data.commit.commit.message,
                 author: data.commit.commit.author.name,
                 createdAt: new Date(data.commit.commit.author.date),
-
             }
         };
+    }
+
+    @OverrideError("GitHubProvider")
+    public async fetchBranches(): Promise<Array<Branch>> {
+        const { data } = await this.getRequest(`/branches`);
+        const fullBranchesData = await Promise.all(data.map((raw: any) => {
+            return this.fetchBranch(raw.name);
+        }))
+
+        return fullBranchesData as Array<Branch>;
     }
 
     private async fetchCommunityInsights(): Promise<CommunityInsights> {

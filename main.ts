@@ -14,8 +14,8 @@ app.get("/api/metrics", async (req, res) => {
     let username: string = "";
     let repo: string = "";
     try {
-        username = req.query.username;
-        repo = req.query.project;
+        username = req.query.username as string;
+        repo = req.query.project as string;
         const metrics = await generateMetrics(username, repo);
         console.log(`[${username}/${repo}] Metrics ready.`);
         const insights = generateInsights(metrics);

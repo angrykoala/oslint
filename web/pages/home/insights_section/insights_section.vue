@@ -1,7 +1,8 @@
 <template>
-    <div>
-        <insight-card v-for="insight of insights" :insight="insight" :key="insight.id" />
-    </div>
+<div>
+    <insight-card v-for="insight of insights" :insight="insight" :key="insight.id"></insight-card>
+    <p v-if="insights.length===0">No insights available</p>
+</div>
 </template>
 
 
@@ -19,5 +20,4 @@ export default {
         "insight-card": InsightCard
     },
 }
-
 </script>

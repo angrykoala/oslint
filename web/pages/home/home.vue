@@ -81,7 +81,7 @@ export default {
             return this.$store.state.metrics;
         },
         sections() {
-            return ["Repository", "Issues", "Pull Requests", "Community"];
+            return ["Repository", "Issues", "Pull Requests", "Community", "Branches"];
         }
     },
     methods: {

@@ -25,6 +25,7 @@ import CommitActivity from "./insights/repository/commit_activity";
 import BlockedIssuesInsight from "./insights/issues/blocked_issues_insight";
 import BugIssuesInsight from "./insights/issues/bugs_issues_insight";
 import HasWikiInsight from "./insights/community/has_wiki_insight";
+import OldBranchesInsight from "./insights/branches/old_branches_insight";
 
 const list = [
     ReadmeInsight,
@@ -53,7 +54,8 @@ const list = [
     LogFilesInsight,
     CrendetialFilesInsight,
     CommitActivity,
-    HasWikiInsight
+    HasWikiInsight,
+    OldBranchesInsight
 ];
 
 export default list.map(insightClass => new insightClass());
