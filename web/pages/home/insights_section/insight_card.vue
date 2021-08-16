@@ -7,7 +7,7 @@
         <div class="message-body">
             <p>{{insight.text}}</p>
 
-            <links-list :links="insight.links" />
+            <links-list v-if="insight.links" :links="insight.links" />
         </div>
     </article>
 </div>

@@ -20,7 +20,8 @@ const maxLinks = 3;
 export default {
     props: {
         links: {
-            required: true
+            required: true,
+            type: Array
         }
     },
     components: {

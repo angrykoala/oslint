@@ -1,13 +1,19 @@
 0.1.5 / ####-##-##
 ==================
 
+* Fix TypeError: this.links is undefined
+* Dependencies updated
+
+0.1.5 / 2020-12-31
+==================
+
 * Adds scroll to insight links list
 
 0.1.4 / 2020-12-31
 ==================
 
-* Dependencies updated
 * Added branches insights
+* Dependencies updated
 
 0.1.3 / 2019-12-27
 ==================
