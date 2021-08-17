@@ -1,6 +1,7 @@
 0.1.6 / ####-##-##
 ==================
 
+* Add releases and downloads insights
 * Fix TypeError: this.links is undefined
 * Dependencies updated
 

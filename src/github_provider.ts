@@ -167,9 +167,7 @@ export class GitHubProvider {
     }
     @OverrideError("GitHubProvider")
     public async fetchReleasesMetrics(): Promise<Release[]> {
-        const { data } = await this.getRequest("/releases", {
-            "per_page": 100
-        });
+        const data = await this.getBatchedRequest("/releases");
         return data.map((release: any): Release => {
 
             return {

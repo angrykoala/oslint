@@ -2,7 +2,7 @@
 
 # Script to deploy oslint on local machine
 
-echo "OSLint Deployer"
+echo "oslint Deployer"
 echo "by @angrykoala"
 
 git checkout master
@@ -18,7 +18,7 @@ case $1 in
        docker-compose up -d --build oslint
        ;;
    *)
-       echo "Deploy OSLint and Caddy"
+       echo "Deploy oslint and Caddy"
        docker-compose up -d --build
        ;;
 esac

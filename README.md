@@ -1,4 +1,4 @@
-OSLint
+oslint
 ====================
 _by @angrykoala_
 

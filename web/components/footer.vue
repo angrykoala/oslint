@@ -2,7 +2,7 @@
     <footer class="footer">
         <div class="content has-text-centered">
             <p>
-                <strong>OSLint</strong> by <a href="https://github.com/angrykoala">@angrykoala</a></br>
+                <strong>oslint</strong> by <a href="https://github.com/angrykoala">@angrykoala</a></br>
                 <a href="https://github.com/angrykoala/oslint">https://github.com/angrykoala/oslint</a>
             </p>
         </div>

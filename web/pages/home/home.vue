@@ -4,7 +4,7 @@
         <div class="hero-body">
             <div class="container">
                 <h1 class="title">
-                    OSLint
+                    oslint
                 </h1>
             </div>
         </div>
