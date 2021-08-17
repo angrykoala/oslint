@@ -1,4 +1,4 @@
-0.1.6 / ####-##-##
+0.1.6 / 2021-08-17
 ==================
 
 * Add releases and downloads insights
