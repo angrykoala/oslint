@@ -1,6 +1,6 @@
 {
     "name": "oslint",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "description": "Open Source Lint",
     "main": "dist/main.js",
     "scripts": {

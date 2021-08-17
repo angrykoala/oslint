@@ -26,6 +26,8 @@ import BlockedIssuesInsight from "./insights/issues/blocked_issues_insight";
 import BugIssuesInsight from "./insights/issues/bugs_issues_insight";
 import HasWikiInsight from "./insights/community/has_wiki_insight";
 import OldBranchesInsight from "./insights/branches/old_branches_insight";
+import LastReleaseInsight from "./insights/releases/last_release_insight";
+import AssetsDownloads from "./insights/releases/assets_downloads";
 
 const list = [
     ReadmeInsight,
@@ -55,7 +57,9 @@ const list = [
     CrendetialFilesInsight,
     CommitActivity,
     HasWikiInsight,
-    OldBranchesInsight
+    OldBranchesInsight,
+    LastReleaseInsight,
+    AssetsDownloads
 ];
 
 export default list.map(insightClass => new insightClass());

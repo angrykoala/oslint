@@ -1,4 +1,4 @@
-0.1.5 / ####-##-##
+0.1.6 / ####-##-##
 ==================
 
 * Fix TypeError: this.links is undefined

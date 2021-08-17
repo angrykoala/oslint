@@ -39,6 +39,24 @@ export interface ProjectMetrics {
     defaultBranch: Branch;
 }
 
+export interface Release {
+    url: string;
+    id: number;
+    tag: string;
+    name: string;
+    publishedAt: Date;
+    draft: boolean;
+    prerelease: boolean;
+    assets: Array<ReleaseAsset>;
+}
+
+export interface ReleaseAsset {
+    url: string;
+    name: string;
+    size: number;
+    downloads: number;
+}
+
 export interface RepositoryContributor {
     username: string;
     id: number;
@@ -146,6 +164,32 @@ export class GitHubProvider {
             community,
             defaultBranch
         };
+    }
+    @OverrideError("GitHubProvider")
+    public async fetchReleasesMetrics(): Promise<Release[]> {
+        const { data } = await this.getRequest("/releases", {
+            "per_page": 100
+        });
+        return data.map((release: any): Release => {
+
+            return {
+                url: release.html_url,
+                id: release.id,
+                tag: release.tag_name,
+                name: release.name,
+                publishedAt: new Date(release.published_at),
+                draft: release.draft,
+                prerelease: release.prerelease,
+                assets: release.assets.map((asset: any): ReleaseAsset => {
+                    return {
+                        url: asset.browser_download_url,
+                        name: asset.name,
+                        size: asset.size,
+                        downloads: asset.download_count
+                    }
+                }),
+            }
+        })
     }
 
     public async fetchContributors(): Promise<Array<RepositoryContributor> | undefined> {

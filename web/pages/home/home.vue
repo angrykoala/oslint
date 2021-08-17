@@ -46,7 +46,7 @@ import Footer from '../../components/footer.vue'
 export default {
     data() {
         return {
-            errorMessage: null
+            errorMessage: null,
             currentSection: "Repository"
         }
     },
@@ -81,11 +81,11 @@ export default {
             return this.$store.state.metrics;
         },
         sections() {
-            return ["Repository", "Issues", "Pull Requests", "Community", "Branches"];
+            return ["Repository", "Issues", "Pull Requests", "Community", "Branches", "Releases"];
         }
     },
     methods: {
-        async onSubmit(repoUrl) {
+        async onSubmit(repoUrl: string) {
             console.log(repoUrl)
             try {
                 const params = repoUrl.split("/")
@@ -115,7 +115,7 @@ export default {
                     this.errorMessage = `Couldn't load repository ${username}/${project}`;
                 }
             }
-        }
+        },
         changeSection(section: string) {
             this.currentSection = section;
         }

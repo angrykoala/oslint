@@ -1,5 +1,4 @@
-// import { ProjectInsights } from "./project_insights";
-import { GitHubProvider, ProjectMetrics, RepositoryContributor, RepositoryIssue, PullRequest, ContentItem, Branch } from "./github_provider";
+import { GitHubProvider, ProjectMetrics, RepositoryContributor, RepositoryIssue, PullRequest, ContentItem, Branch, Release } from "./github_provider";
 import { Insight } from "./insights/insight";
 import InsightsList from './insights_list';
 import { SerializedInsight } from "./insights/types";
@@ -17,6 +16,7 @@ export interface ProviderMetrics {
     contents: Array<ContentItem>;
     pullRequests: Array<PullRequest>;
     branches: Array<Branch>;
+    releases: Array<Release>;
 }
 
 export async function generateMetrics(username: string, repo: string): Promise<ProviderMetrics> {
@@ -28,7 +28,8 @@ export async function generateMetrics(username: string, repo: string): Promise<P
         ghProvider.fetchIssues(),
         ghProvider.fetchContents(),
         ghProvider.fetchPullRequests(),
-        ghProvider.fetchBranches()
+        ghProvider.fetchBranches(),
+        ghProvider.fetchReleasesMetrics(),
     ]);
 
 
@@ -38,7 +39,8 @@ export async function generateMetrics(username: string, repo: string): Promise<P
         issues: data[2] as Array<RepositoryIssue>,
         contents: data[3] as Array<ContentItem>,
         pullRequests: data[4] as Array<PullRequest>,
-        branches: data[5] as Array<Branch>
+        branches: data[5] as Array<Branch>,
+        releases: data[6] as Array<Release>,
     };
     return metrics;
 }

@@ -27,5 +27,6 @@ export enum InsightSection {
     issues = "Issues",
     pullRequests = "Pull Requests",
     community = "Community",
-    branches = "Branches"
+    branches = "Branches",
+    releases = "Releases"
 }

@@ -49,6 +49,9 @@ export default {
             }, {
                 name: "Pull Requests",
                 value: this.metrics.pullRequests.length
+            },{
+                name: "Releases",
+                value: this.metrics.releases.length
             }].filter(item => item.value !== null && item.value !== undefined)
         }
     }
